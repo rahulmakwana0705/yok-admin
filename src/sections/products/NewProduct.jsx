@@ -36,7 +36,7 @@ const variationsValue = ["Small", "Medium", "Extra Large"];
 const colorsValue = ["Red", "Green", "Orange"];
 
 const NewProduct = () => {
-    const [tags, setTags] = React.useState([]);
+  const [tags, setTags] = React.useState([]);
   const [color, setColor] = React.useState([]);
   const [variations, setVariations] = React.useState([]);
 
@@ -67,23 +67,23 @@ const NewProduct = () => {
     const {
       target: { value },
     } = event;
-    
-    if(name === 'tags'){
+
+    if (name === 'tags') {
       setTags(
         typeof value === "string" ? value.split(",") : value
       );
     }
-    if(name === 'colors'){
+    if (name === 'colors') {
       setColor(
         typeof value === "string" ? value.split(",") : value
       );
     }
-    if(name === 'variations'){
+    if (name === 'variations') {
       setVariations(
         typeof value === "string" ? value.split(",") : value
       );
     }
-    
+
   };
 
   const handleChange = (event) => {
@@ -104,7 +104,7 @@ const NewProduct = () => {
           image: files[0],
         }));
       } else if (name === "gallery") {
-        const selectedFiles = Array.from(files).slice(0, 10); 
+        const selectedFiles = Array.from(files).slice(0, 10);
         setProductData((prevState) => ({
           ...prevState,
           gallery: selectedFiles,
@@ -134,14 +134,34 @@ const NewProduct = () => {
   };
 
   const handleCreateProduct = async () => {
-    // console.log('productData clik', productData);
     try {
-      const response = await createProductAPI([productData]);
+      const formData = new FormData();
+      formData.append("image", productData.image);
+      formData.append("name", productData.name);
+      formData.append("slug", productData.slug);
+      formData.append("sku", productData.sku);
+      formData.append("description", productData.description);
+      formData.append("price", productData.price);
+      formData.append("sale_price", productData.sale_price);
+      formData.append("quantity", productData.quantity);
+      formData.append("category", JSON.stringify(productData.category));
+      formData.append("tags", JSON.stringify(productData.tags));
+      formData.append("gender", JSON.stringify(productData.gender));
+      formData.append("customizable", productData.customizable);
+      formData.append("variations", productData.variations);
+      formData.append("meta", productData.meta);
+
+      productData.gallery.forEach((image, index) => {
+        formData.append(`gallery`, image);
+      });
+
+      const response = await createProductAPI(formData);
       console.log("Product created successfully:", response);
     } catch (error) {
       console.error("Error creating product:", error);
     }
   };
+
 
   console.log("productData", productData);
   return (
