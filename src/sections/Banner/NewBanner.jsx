@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import { createBannerAPI } from "src/api/api";
 
 const NewBanner = () => {
   const [productData, setProductData] = useState({
-    title: 'Winter Collection of Kid Items',
+    title: '',
     slug: "",
     desktopImage: null,
     mobileImage: null,
@@ -35,6 +37,17 @@ const NewBanner = () => {
     }
   };
   console.log('productData', productData);
+  const handleSubmit = async () => {
+    // Perform submission logic here
+    console.log('Submitting banner data:', productData);
+    const formData = new FormData();
+    formData.append("desktopImage", productData.desktopImage);
+    formData.append("mobileImage", productData.mobileImage);
+    formData.append("slug", productData.slug);
+    formData.append("title", productData.title);
+    const response = await createBannerAPI(formData);
+    console.log("banner created successfully:", response);
+  };
   return (
     <Container style={{ width: "70%" }}>
       <Typography variant="h4" gutterBottom>
@@ -46,10 +59,22 @@ const NewBanner = () => {
           className="input-box"
           style={{ width: "100%" }}
           id="outlined-basic"
+          label="Title"
+          variant="outlined"
+          name="title"
+          value={productData.title}
+          onChange={handleInputChange}
+        />
+      </div>
+      <div className="input-section">
+        <TextField
+          className="input-box"
+          style={{ width: "100%" }}
+          id="outlined-basic"
           label="Slug"
           variant="outlined"
           name="slug"
-          value={productData.name}
+          value={productData.slug}
           onChange={handleInputChange}
         />
       </div>
@@ -139,6 +164,16 @@ const NewBanner = () => {
               </div>
             )}
           </div>
+        </div>
+        {/* Submit button */}
+        <div className="mt-3">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
         </div>
       </div>
     </Container>

@@ -4,15 +4,8 @@ import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
+
 import { createProductAPI } from "src/api/api";
 
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -56,6 +49,7 @@ const NewProduct = () => {
     meta: [],
     gender: [],
     customizable: false,
+    type: "Normal",
   });
 
 
@@ -93,6 +87,16 @@ const NewProduct = () => {
       [name]: name === "customizable" ? checked : value,
     }));
   };
+
+  const handleRadioChange = (event) => {
+    const { name, value } = event.target;
+    console.log(name, value)
+    setProductData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
 
   const handleInputChange = (event) => {
     const { name, value, files } = event.target;
@@ -150,6 +154,7 @@ const NewProduct = () => {
       formData.append("customizable", productData.customizable);
       formData.append("variations", productData.variations);
       formData.append("meta", productData.meta);
+      formData.append("type", productData.type);
 
       productData.gallery.forEach((image, index) => {
         formData.append(`gallery`, image);
@@ -452,6 +457,34 @@ const NewProduct = () => {
               }
               label="Customizable"
             />
+          </div>
+
+          <div className="mt-4">
+            <FormControl component="fieldset">
+              <RadioGroup
+                row
+                aria-label="Type"
+                name="type"
+                value={productData.type}
+                onChange={handleRadioChange}
+              >
+                <FormControlLabel
+                  value="Normal"
+                  control={<Radio />}
+                  label="Normal"
+                />
+                <FormControlLabel
+                  value="Custom"
+                  control={<Radio />}
+                  label="Custom"
+                />
+                <FormControlLabel
+                  value="Combo"
+                  control={<Radio />}
+                  label="Combo"
+                />
+              </RadioGroup>
+            </FormControl>
           </div>
 
           <div className="mt-4">

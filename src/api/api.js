@@ -17,6 +17,21 @@ export const createProductAPI = async (productData) => {
     }
 };
 
+export const createBannerAPI = async (bannerData) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/banner/create`, bannerData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating product:', error);
+        throw error;
+    }
+};
+
 export const getAllCategory = async () => {
     try {
         const response = await axios.get(`${BASE_URL}/category/get`, {
