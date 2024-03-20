@@ -27,6 +27,7 @@ export const Reportspage = lazy(() => import('src/pages/reports'));
 export const pagebuilder = lazy(() => import('src/layouts/pagebuilder/pagebuilder'));
 export const ContectUs = lazy(() => import('src/pages/ContectDetails'));
 export const FAQ = lazy(() => import('src/pages/FAQ'));
+export const BannerPage = lazy(() => import('src/pages/BannerPage'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 // ----------------------------------------------------------------------
@@ -45,6 +46,7 @@ export default function Router() {
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
+        { path: 'Banner', element: <BannerPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'order', element: <OrderPage /> },
         { path: 'review', element: <Reviewpage /> },

@@ -16,6 +16,7 @@ import ThumbUpTwoToneIcon from '@mui/icons-material/ThumbUpTwoTone';
 import ChecklistTwoToneIcon from '@mui/icons-material/ChecklistTwoTone';
 import SecurityTwoToneIcon from '@mui/icons-material/SecurityTwoTone';
 import GroupsTwoToneIcon from '@mui/icons-material/GroupsTwoTone';
+import FilterBAndWTwoToneIcon from '@mui/icons-material/FilterBAndWTwoTone';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +39,11 @@ const navConfig = [
     title: 'product',
     path: '/products',
     icon: icon('ic_cart'),
+  },
+  {
+    title: 'Banner',
+    path: '/banner',
+    icon: <FilterBAndWTwoToneIcon />,
   },
   {
     title: 'Category',
