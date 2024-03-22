@@ -46,7 +46,8 @@
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.16.0",
     "simplebar-react": "^3.2.4",
-    "styled-components": "^6.1.8"
+    "styled-components": "^6.1.8",
+    "sweetalert2": "^11.10.7"
   },
   "devDependencies": {
     "@vitejs/plugin-react-swc": "^3.4.0",

@@ -4,7 +4,9 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
 import { createBannerAPI } from "src/api/api";
+import Swal from "sweetalert2";
 
 const NewBanner = () => {
   const [productData, setProductData] = useState({
@@ -37,6 +39,13 @@ const NewBanner = () => {
     }
   };
   console.log('productData', productData);
+  const handlePositionChange = (event) => {
+    const { value } = event.target;
+    setProductData((prevState) => ({
+      ...prevState,
+      position: value, // Update state for position selection
+    }));
+  };
   const handleSubmit = async () => {
     // Perform submission logic here
     console.log('Submitting banner data:', productData);
@@ -45,7 +54,24 @@ const NewBanner = () => {
     formData.append("mobileImage", productData.mobileImage);
     formData.append("slug", productData.slug);
     formData.append("title", productData.title);
+    formData.append("position", productData.position);
     const response = await createBannerAPI(formData);
+    console.log(response)
+    if (response.success) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Banner has been created",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      setProductData({
+        title: '',
+        slug: "",
+        desktopImage: null,
+        mobileImage: null,
+      })
+    }
     console.log("banner created successfully:", response);
   };
   return (
@@ -64,6 +90,9 @@ const NewBanner = () => {
           name="title"
           value={productData.title}
           onChange={handleInputChange}
+          sx={{
+            marginBottom: '10px'
+          }}
         />
       </div>
       <div className="input-section">
@@ -165,6 +194,23 @@ const NewBanner = () => {
             )}
           </div>
         </div>
+        {/* Position dropdown */}
+        <TextField
+          select
+          label="Position"
+          value={productData.position}
+          onChange={handlePositionChange}
+          variant="outlined"
+          sx={{
+            marginTop: '10px',
+            width: '100%'
+          }}
+        >
+          <MenuItem value="first">First Banner</MenuItem>
+          <MenuItem value="second">Second Banner</MenuItem>
+          <MenuItem value="third">Third Banner</MenuItem>
+        </TextField>
+
         {/* Submit button */}
         <div className="mt-3">
           <Button

@@ -32,6 +32,38 @@ export const createBannerAPI = async (bannerData) => {
     }
 };
 
+export const getAllBanners = async () => {
+    try {
+        const response = await axios.get(`${BASE_URL}/banner/get`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log(response.data)
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating product:', error);
+        throw error;
+    }
+};
+
+export const deleteBanner = async (id) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/banner/delete`, { id }, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log(response.data)
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating product:', error);
+        throw error;
+    }
+};
+
 export const getAllCategory = async () => {
     try {
         const response = await axios.get(`${BASE_URL}/category/get`, {
