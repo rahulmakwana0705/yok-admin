@@ -14,6 +14,9 @@ import { getAllCategory } from "src/api/api";
 // import NewCategory from "../NewCategory";
 
 export default function CategoriesView() {
+    const [allCatagory, setAllCatagory] = useState([]);
+    const [filteredCategories, setFilteredCategories] = useState([])
+
     const [activeButton, setActiveButton] = useState("category");
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOption, setSortOption] = useState('');
@@ -49,21 +52,27 @@ export default function CategoriesView() {
         setSortOption(event.target.value);
     };
 
-    const filteredCategories = dummyCategories
-        .filter((category) => {
-            const searchTermLower = searchTerm.toLowerCase();
-            return Object.values(category).some(
-                (value) => typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
-            );
-        })
-        .sort((a, b) => {
-            if (sortOption === 'OrderLevelHighToLow') {
-                return a.orderLevel > b.orderLevel ? -1 : 1;
-            } else if (sortOption === 'OrderLevelLowToHigh') {
-                return a.orderLevel < b.orderLevel ? -1 : 1;
-            }
-            return 0;
-        });
+    useEffect(() => {
+        if(allCatagory.length > 0){
+            const filteredCategorie = allCatagory
+            .filter((category) => {
+                const searchTermLower = searchTerm.toLowerCase();
+                return Object.values(category).some(
+                    (value) => typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
+                );
+            })
+            .sort((a, b) => {
+                if (sortOption === 'OrderLevelHighToLow') {
+                    return a.orderLevel > b.orderLevel ? -1 : 1;
+                } else if (sortOption === 'OrderLevelLowToHigh') {
+                    return a.orderLevel < b.orderLevel ? -1 : 1;
+                }
+                return 0;
+            });
+            setFilteredCategories(filteredCategorie)
+        }
+    }, [allCatagory])
+    
 
     useEffect(() => {
         loadData();
@@ -71,9 +80,9 @@ export default function CategoriesView() {
 
     const loadData = async() => {
         const data = await getAllCategory()
-        console.log('data', data);
+        setAllCatagory(data?.data)
     }
-    
+    console.log('all catagory, filteredCategories',filteredCategories);
 
     return (
         <Container>
@@ -152,12 +161,12 @@ export default function CategoriesView() {
                             </thead>
                             <tbody>
                                 {filteredCategories && filteredCategories.length > 0 ? (
-                                    filteredCategories.map((category) => (
-                                        <tr key={category.id}>
-                                            <td>{category.id}</td>
+                                    filteredCategories.map((category, index) => (
+                                        <tr key={category._id}>
+                                            <td>{index+1}</td>
                                             <td>{category.name}</td>
-                                            <td>{category.parentCategory}</td>
-                                            <td>{category.orderLevel}</td>
+                                            <td>{category.slug}</td>
+                                            <td>{category.productCount}</td>
                                             <td>{category.banner}</td>
                                             <td>
                                                 <IconButton onClick={() => handleView(category.id)} title="View">
