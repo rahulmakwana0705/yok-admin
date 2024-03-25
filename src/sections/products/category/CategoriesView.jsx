@@ -11,7 +11,7 @@ import Iconify from "src/components/iconify";
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import "./CategoriesView.css";
 import { getAllCategory } from "src/api/api";
-// import NewCategory from "../NewCategory";
+import NewCategory from "./NewCategory.jsx";
 
 export default function CategoriesView() {
     const [allCatagory, setAllCatagory] = useState([]);
@@ -153,9 +153,9 @@ export default function CategoriesView() {
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
-                                    <th>Parent Category</th>
-                                    <th>Order Level</th>
-                                    <th>Banner</th>
+                                    <th>slug</th>
+                                    <th>Product Count</th>
+                                    {/* <th>Banner</th> */}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -167,11 +167,11 @@ export default function CategoriesView() {
                                             <td>{category.name}</td>
                                             <td>{category.slug}</td>
                                             <td>{category.productCount}</td>
-                                            <td>{category.banner}</td>
+                                            {/* <td>{category.banner}</td> */}
                                             <td>
-                                                <IconButton onClick={() => handleView(category.id)} title="View">
+                                                {/* <IconButton onClick={() => handleView(category.id)} title="View">
                                                     <VisibilityIcon />
-                                                </IconButton>
+                                                </IconButton> */}
                                                 <IconButton onClick={() => handleEdit(category.id)} title="Edit">
                                                     <EditIcon />
                                                 </IconButton>
@@ -191,7 +191,7 @@ export default function CategoriesView() {
                     </div>
                 </div>
             )}
-            {/* {activeButton === "newCategory" && <NewCategory />} */}
+            {activeButton === "newCategory" && <NewCategory />}
         </Container>
     );
 }
