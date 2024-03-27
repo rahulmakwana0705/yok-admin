@@ -58,27 +58,56 @@ const NewProduct = () => {
   console.log('variations', variations);
 
   const handleTagChange = (name, event) => {
-    const {
-      target: { value },
-    } = event;
+    const { target: { value } } = event;
+
+    let newVariations = [];
+    let existingVariations = [];
 
     if (name === 'tags') {
-      setTags(
-        typeof value === "string" ? value.split(",") : value
-      );
+      setTags(typeof value === "string" ? value.split(",") : value);
     }
     if (name === 'colors') {
-      setColor(
-        typeof value === "string" ? value.split(",") : value
-      );
+      setColor(typeof value === "string" ? value.split(",") : value);
+      newVariations = value.map(color => ({
+        id: variationsValue.length + 1,
+        value: color,
+        attribute: {
+          id: 1,
+          name: "Color",
+          slug: "color"
+        }
+      }));
+      // Filter out existing variations that are not colors
+      existingVariations = productData.variations.filter(variation => variation.attribute.slug !== "color");
     }
     if (name === 'variations') {
-      setVariations(
-        typeof value === "string" ? value.split(",") : value
-      );
+      setVariations(typeof value === "string" ? value.split(",") : value);
+      newVariations = value.map(size => ({
+        id: variationsValue.length + 1,
+        value: size,
+        attribute: {
+          id: 1,
+          name: "Size",
+          slug: "size"
+        }
+      }));
+      // Filter out existing variations that are not sizes
+      existingVariations = productData.variations.filter(variation => variation.attribute.slug !== "size");
     }
 
+    // Combine existing variations with new variations
+    const updatedVariations = [...existingVariations, ...newVariations];
+
+    // Update productData with unique variations
+    setProductData(prevData => ({
+      ...prevData,
+      variations: updatedVariations
+    }));
   };
+
+
+
+
 
   const handleChange = (event) => {
     const { name, value, checked } = event.target;
@@ -152,7 +181,7 @@ const NewProduct = () => {
       formData.append("tags", JSON.stringify(productData.tags));
       formData.append("gender", JSON.stringify(productData.gender));
       formData.append("customizable", productData.customizable);
-      formData.append("variations", productData.variations);
+      formData.append("variations", JSON.stringify(productData.variations));
       formData.append("meta", productData.meta);
       formData.append("type", productData.type);
 

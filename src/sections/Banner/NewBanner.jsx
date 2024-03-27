@@ -209,6 +209,8 @@ const NewBanner = () => {
           <MenuItem value="first">First Banner</MenuItem>
           <MenuItem value="second">Second Banner</MenuItem>
           <MenuItem value="third">Third Banner</MenuItem>
+          <MenuItem value="fourth">Fourth Banner</MenuItem>
+          <MenuItem value="fifth">Fifth Banner</MenuItem>
         </TextField>
 
         {/* Submit button */}
