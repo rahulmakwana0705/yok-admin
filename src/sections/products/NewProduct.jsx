@@ -24,7 +24,7 @@ const MenuProps = {
 
 const tagsValue = ["Casual", "Cotton"];
 
-const variationsValue = ["Small", "Medium", "Extra Large"];
+const variationsValue = ["Small", "Medium", 'Large', "Extra Large"];
 
 const colorsValue = ["Red", "Green", "Orange"];
 
@@ -48,7 +48,6 @@ const NewProduct = () => {
     variations: [],
     meta: [],
     gender: [],
-    customizable: false,
     type: "Normal",
   });
 
@@ -68,6 +67,7 @@ const NewProduct = () => {
     }
     if (name === 'colors') {
       setColor(typeof value === "string" ? value.split(",") : value);
+
       newVariations = value.map(color => ({
         id: variationsValue.length + 1,
         value: color,
@@ -82,9 +82,15 @@ const NewProduct = () => {
     }
     if (name === 'variations') {
       setVariations(typeof value === "string" ? value.split(",") : value);
+      let shortForms = [
+        'Small' = 'S',
+        'Medium' = 'M',
+        'Large' = 'L',
+        'Extra Large' = 'XL'
+      ]
       newVariations = value.map(size => ({
         id: variationsValue.length + 1,
-        value: size,
+        value: shortForms[size],
         attribute: {
           id: 1,
           name: "Size",
@@ -180,7 +186,6 @@ const NewProduct = () => {
       formData.append("category", JSON.stringify(productData.category));
       formData.append("tags", JSON.stringify(productData.tags));
       formData.append("gender", JSON.stringify(productData.gender));
-      formData.append("customizable", productData.customizable);
       formData.append("variations", JSON.stringify(productData.variations));
       formData.append("meta", productData.meta);
       formData.append("type", productData.type);
@@ -474,7 +479,7 @@ const NewProduct = () => {
               />
             </div>
           </div>
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <FormControlLabel
               fullWidth
               control={
@@ -486,7 +491,7 @@ const NewProduct = () => {
               }
               label="Customizable"
             />
-          </div>
+          </div> */}
 
           <div className="mt-4">
             <FormControl component="fieldset">
