@@ -82,12 +82,12 @@ const NewProduct = () => {
     }
     if (name === 'variations') {
       setVariations(typeof value === "string" ? value.split(",") : value);
-      let shortForms = [
-        'Small' = 'S',
-        'Medium' = 'M',
-        'Large' = 'L',
-        'Extra Large' = 'XL'
-      ]
+      let shortForms = {
+        'Small': 'S',
+        'Medium': 'M',
+        'Large': 'L',
+        'Extra Large': 'XL'
+      };
       newVariations = value.map(size => ({
         id: variationsValue.length + 1,
         value: shortForms[size],
