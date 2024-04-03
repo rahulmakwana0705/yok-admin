@@ -10,12 +10,15 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import Iconify from "src/components/iconify";
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import "./CategoriesView.css";
-import { getAllCategory } from "src/api/api";
+import { getAllCategory, deleteCategory } from "src/api/api";
 import NewCategory from "./NewCategory.jsx";
+import Swal from "sweetalert2";
+
 
 export default function CategoriesView() {
     const [allCatagory, setAllCatagory] = useState([]);
     const [filteredCategories, setFilteredCategories] = useState([])
+    const [editCategoryData, setEditCategoryData] = useState([])
 
     const [activeButton, setActiveButton] = useState("category");
     const [searchTerm, setSearchTerm] = useState('');
@@ -37,11 +40,41 @@ export default function CategoriesView() {
     };
 
     const handleEdit = (categoryId) => {
-        console.log(`Edit category with ID: ${categoryId}`);
+        const categoryToEdit = allCatagory.find(category => category._id === categoryId);
+        setActiveButton("newCategory");
+        setEditCategoryData(categoryToEdit);
     };
 
-    const handleDelete = (categoryId) => {
-        console.log(`Delete category with ID: ${categoryId}`);
+    const handleDelete = async (catagoryId) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await deleteCategory(catagoryId); // Make API call to delete the banner
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your banner has been deleted.",
+                        icon: "success"
+                    });
+                    // Refresh the list of banners after deletion
+                    loadData();
+                } catch (error) {
+                    console.error('Error deleting banner:', error);
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to delete the banner.",
+                        icon: "error"
+                    });
+                }
+            }
+        });
     };
 
     const handleSearch = (event) => {
@@ -53,36 +86,36 @@ export default function CategoriesView() {
     };
 
     useEffect(() => {
-        if(allCatagory.length > 0){
+        if (allCatagory.length > 0) {
             const filteredCategorie = allCatagory
-            .filter((category) => {
-                const searchTermLower = searchTerm.toLowerCase();
-                return Object.values(category).some(
-                    (value) => typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
-                );
-            })
-            .sort((a, b) => {
-                if (sortOption === 'OrderLevelHighToLow') {
-                    return a.orderLevel > b.orderLevel ? -1 : 1;
-                } else if (sortOption === 'OrderLevelLowToHigh') {
-                    return a.orderLevel < b.orderLevel ? -1 : 1;
-                }
-                return 0;
-            });
+                .filter((category) => {
+                    const searchTermLower = searchTerm.toLowerCase();
+                    return Object.values(category).some(
+                        (value) => typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
+                    );
+                })
+                .sort((a, b) => {
+                    if (sortOption === 'OrderLevelHighToLow') {
+                        return a.orderLevel > b.orderLevel ? -1 : 1;
+                    } else if (sortOption === 'OrderLevelLowToHigh') {
+                        return a.orderLevel < b.orderLevel ? -1 : 1;
+                    }
+                    return 0;
+                });
             setFilteredCategories(filteredCategorie)
         }
     }, [allCatagory])
-    
+
 
     useEffect(() => {
         loadData();
     }, [])
 
-    const loadData = async() => {
+    const loadData = async () => {
         const data = await getAllCategory()
         setAllCatagory(data?.data)
     }
-    console.log('all catagory, filteredCategories',filteredCategories);
+    console.log('all catagory, filteredCategories', filteredCategories);
 
     return (
         <Container>
@@ -97,7 +130,7 @@ export default function CategoriesView() {
                         <Typography variant="h4">Categories</Typography>
 
                         <Button
-                            // onClick={handleNewCategoryButtonClick}
+                            onClick={handleNewCategoryButtonClick}
                             variant="contained"
                             color="inherit"
                             startIcon={<Iconify icon="eva:plus-fill" />}
@@ -153,6 +186,8 @@ export default function CategoriesView() {
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
+                                    <th>Image</th>
+                                    <th>Icon</th>
                                     <th>slug</th>
                                     <th>Product Count</th>
                                     {/* <th>Banner</th> */}
@@ -163,19 +198,26 @@ export default function CategoriesView() {
                                 {filteredCategories && filteredCategories.length > 0 ? (
                                     filteredCategories.map((category, index) => (
                                         <tr key={category._id}>
-                                            <td>{index+1}</td>
+                                            <td>{index + 1}</td>
                                             <td>{category.name}</td>
+                                            <td>
+                                                <img src={category.image.original} alt={category.name} style={{ maxWidth: '100px' }} />
+                                            </td>
+                                            <td>
+                                                <img src={category.icon} alt={category.name} style={{ maxWidth: '30px' }} />
+                                            </td>
                                             <td>{category.slug}</td>
+
                                             <td>{category.productCount}</td>
                                             {/* <td>{category.banner}</td> */}
                                             <td>
                                                 {/* <IconButton onClick={() => handleView(category.id)} title="View">
                                                     <VisibilityIcon />
                                                 </IconButton> */}
-                                                <IconButton onClick={() => handleEdit(category.id)} title="Edit">
+                                                <IconButton onClick={() => handleEdit(category._id)} title="Edit">
                                                     <EditIcon />
                                                 </IconButton>
-                                                <IconButton onClick={() => handleDelete(category.id)} title="Delete">
+                                                <IconButton onClick={() => handleDelete(category._id)} title="Delete">
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </td>
@@ -191,7 +233,7 @@ export default function CategoriesView() {
                     </div>
                 </div>
             )}
-            {activeButton === "newCategory" && <NewCategory />}
+            {activeButton === "newCategory" && <NewCategory categoryDataToEdit={editCategoryData} />}
         </Container>
     );
 }

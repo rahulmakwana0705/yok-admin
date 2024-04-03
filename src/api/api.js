@@ -32,6 +32,21 @@ export const createBannerAPI = async (bannerData) => {
     }
 };
 
+export const createCategoryAPI = async (categoryData) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/category/create`, categoryData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating category:', error);
+        throw error;
+    }
+};
+
 export const getAllBanners = async () => {
     try {
         const response = await axios.get(`${BASE_URL}/banner/get`, {
@@ -60,6 +75,22 @@ export const deleteBanner = async (id) => {
         return response.data;
     } catch (error) {
         console.error('Error creating product:', error);
+        throw error;
+    }
+};
+
+export const deleteCategory = async (id) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/category/delete`, { id }, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log(response.data)
+
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting category:', error);
         throw error;
     }
 };
