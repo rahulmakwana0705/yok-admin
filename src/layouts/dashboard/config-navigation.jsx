@@ -51,6 +51,11 @@ const navConfig = [
     icon: <CategoryTwoToneIcon />,
   },
   {
+    title: 'Sub Category Menu',
+    path: '/sub-menu',
+    icon: <CategoryTwoToneIcon />,
+  },
+  {
     title: 'Review',
     path: '/review',
     icon: <ReviewsTwoToneIcon />,

@@ -211,3 +211,18 @@ export const fetchTermsCondition = async () => {
         throw error;
     }
 };
+
+export const creteSubmenu = async (data) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/sub-category/create`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error creating submeny:', error);
+        throw error;
+    }
+};

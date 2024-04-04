@@ -13,6 +13,7 @@ import TransectionView from 'src/sections/Transection/view/TransectionView';
 import TermsAndConditions from 'src/sections/termsAndConditions/termsAndConditions';
 import PrivacyPolicy from 'src/sections/PrivacyPolicy/PrivacyPolicy';
 import AboutUs from 'src/sections/AboutUs/AboutUs';
+import Submenu from 'src/sections/submenu/Submenu';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -60,6 +61,7 @@ export default function Router() {
         { path: 'rating-approval', element: <RatingApprovalView /> },
         { path: 'terms-and-conditions', element: <TermsAndConditions /> },
         { path: 'privacy-policy', element: <PrivacyPolicy /> },
+        { path: 'sub-menu', element: <Submenu /> },
         { path: 'about-us', element: <AboutUs /> },
         { path: 'contect-us', element: <ContectUs /> },
         { path: 'faq', element: <FAQ /> },
