@@ -10,6 +10,7 @@ import { createProductAPI } from "src/api/api";
 
 import OutlinedInput from "@mui/material/OutlinedInput";
 import ListItemText from "@mui/material/ListItemText";
+import { useNavigate } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -29,6 +30,7 @@ const variationsValue = ["Small", "Medium", 'Large', "Extra Large"];
 const colorsValue = ["Red", "Green", "Orange"];
 
 const NewProduct = () => {
+  const navigate = useNavigate()
   const [tags, setTags] = React.useState([]);
   const [color, setColor] = React.useState([]);
   const [variations, setVariations] = React.useState([]);
@@ -135,6 +137,7 @@ const NewProduct = () => {
 
   const handleInputChange = (event) => {
     const { name, value, files } = event.target;
+    let updatedMetaData = [...productData.meta]
     if (files) {
 
       if (name === "image") {
@@ -149,7 +152,30 @@ const NewProduct = () => {
           gallery: selectedFiles,
         }));
       }
-    } else {
+    } else if (name === 'productDetails' || name === 'additionalInformation' || name === 'customerReviews') {
+      // Find the index of the corresponding metaData object based on its title
+      const index = updatedMetaData.findIndex(meta => meta.title === name);
+  
+      // Update the metaData object if found, or create a new one otherwise
+      if (index !== -1) {
+        updatedMetaData[index] = {
+          ...updatedMetaData[index],
+          content: value
+        };
+      } else {
+        updatedMetaData.push({
+          id: productData.meta.length + 1, // Increment the ID
+          title: name,
+          content: value
+        });
+      }
+  
+      // Update the meta state
+      setProductData((prevState) => ({
+        ...prevState,
+        meta: updatedMetaData,
+      }));
+    }  else {
       setProductData((prevState) => ({
         ...prevState,
         [name]: value,
@@ -187,7 +213,7 @@ const NewProduct = () => {
       formData.append("tags", JSON.stringify(productData.tags));
       formData.append("gender", JSON.stringify(productData.gender));
       formData.append("variations", JSON.stringify(productData.variations));
-      formData.append("meta", productData.meta);
+      formData.append("meta", JSON.stringify(productData.meta));
       formData.append("type", productData.type);
 
       productData.gallery.forEach((image, index) => {
@@ -196,6 +222,9 @@ const NewProduct = () => {
 
       const response = await createProductAPI(formData);
       console.log("Product created successfully:", response);
+      if(response){
+        navigate('/products')
+      }
     } catch (error) {
       console.error("Error creating product:", error);
     }
@@ -528,7 +557,7 @@ const NewProduct = () => {
               placeholder="Product Details"
               label="Product Details"
               name="productDetails"
-              onChange={handleChange}
+              onChange={handleInputChange}
             ></textarea>
           </div>
 
@@ -539,7 +568,7 @@ const NewProduct = () => {
               placeholder="Additional Information"
               label="Additional Information"
               name="additionalInformation"
-              onChange={handleChange}
+              onChange={handleInputChange}
             ></textarea>
           </div>
 
@@ -550,7 +579,7 @@ const NewProduct = () => {
               placeholder="Customer Reviews"
               label="Customer Reviews"
               name="customerReviews"
-              onChange={handleChange}
+              onChange={handleInputChange}
             ></textarea>
           </div>
         </div>
