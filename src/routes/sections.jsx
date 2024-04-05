@@ -14,6 +14,8 @@ import TermsAndConditions from 'src/sections/termsAndConditions/termsAndConditio
 import PrivacyPolicy from 'src/sections/PrivacyPolicy/PrivacyPolicy';
 import AboutUs from 'src/sections/AboutUs/AboutUs';
 import Submenu from 'src/sections/submenu/Submenu';
+import CreateSubmenu from 'src/sections/submenu/CreateSubenu';
+import UpdateSubmenu from 'src/sections/submenu/UpdateSubmenu';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -62,6 +64,8 @@ export default function Router() {
         { path: 'terms-and-conditions', element: <TermsAndConditions /> },
         { path: 'privacy-policy', element: <PrivacyPolicy /> },
         { path: 'sub-menu', element: <Submenu /> },
+        { path: 'sub-menu/create', element: <CreateSubmenu /> },
+        { path: 'sub-menu/:id/edit', element: <UpdateSubmenu /> },
         { path: 'about-us', element: <AboutUs /> },
         { path: 'contect-us', element: <ContectUs /> },
         { path: 'faq', element: <FAQ /> },

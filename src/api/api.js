@@ -226,3 +226,56 @@ export const creteSubmenu = async (data) => {
         throw error;
     }
 };
+export const updateSubmenu = async (data) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/sub-category/update`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error creating submeny:', error);
+        throw error;
+    }
+};
+
+
+export const getSubmenus = async (id = null) => {
+    try {
+        let url = `${BASE_URL}/sub-category/get`;
+
+        if (id) {
+            url += `?id=${id}`;
+        }
+
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error fetching submenus:', error);
+        throw error;
+    }
+};
+
+
+export const deleteSubCategory = async (id) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/sub-category/delete`, { id }, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log(response.data)
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating product:', error);
+        throw error;
+    }
+};
