@@ -96,6 +96,11 @@ const navConfig = [
     icon: <CurrencyExchangeTwoToneIcon />,
   },
   {
+    title: 'Payment Setting',
+    path: '/payment-setting',
+    icon: <CurrencyExchangeTwoToneIcon />,
+  },
+  {
     title: 'Invoice',
     path: '/invoice',
     icon: <DescriptionTwoToneIcon />,

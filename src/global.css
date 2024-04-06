@@ -15,3 +15,17 @@ p{
     justify-content: center !important;
     align-items: center !important;
 }
+
+.payment-input-box{
+    color: currentcolor;
+    border: 1px solid #dbd7d7;
+    border-radius: 6px;
+    box-sizing: content-box;
+    background: none;
+    width: 97%;
+    padding: 16px 14px;
+}
+
+.create-product-input-box-two-yokk{
+    width: 100%;
+}

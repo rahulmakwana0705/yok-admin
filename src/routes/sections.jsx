@@ -16,6 +16,7 @@ import AboutUs from 'src/sections/AboutUs/AboutUs';
 import Submenu from 'src/sections/submenu/Submenu';
 import CreateSubmenu from 'src/sections/submenu/CreateSubenu';
 import UpdateSubmenu from 'src/sections/submenu/UpdateSubmenu';
+import PaymentSetting from 'src/sections/PaymentSetting/PaymentSetting';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
@@ -59,6 +60,7 @@ export default function Router() {
         { path: 'roles', element: <RolesView /> },
         { path: 'shipping', element: <ShippingView /> },
         { path: 'transection', element: <TransectionView /> },
+        { path: 'payment-setting', element: <PaymentSetting /> },
         { path: 'invoice', element: <InvoiceView /> },
         { path: 'rating-approval', element: <RatingApprovalView /> },
         { path: 'terms-and-conditions', element: <TermsAndConditions /> },
