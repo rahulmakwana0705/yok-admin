@@ -68,6 +68,7 @@ export default function PaymentSetting() {
           onClick={handleCreateProduct}
           variant="contained"
           color="inherit"
+          style={{marginTop: '15px'}}
         >
           Submit
         </Button>
