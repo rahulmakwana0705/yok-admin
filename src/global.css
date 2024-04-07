@@ -16,13 +16,16 @@ p{
     align-items: center !important;
 }
 
+.create-product-details-product-name-image-ds{
+    width: 100%;
+}
+
 .payment-input-box{
     color: currentcolor;
     border: 1px solid #dbd7d7;
     border-radius: 6px;
-    box-sizing: content-box;
     background: none;
-    width: 97%;
+    width: 100%;
     padding: 16px 14px;
 }
 

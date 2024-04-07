@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+/* eslint-disable */
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -10,7 +11,7 @@ import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
 
-import { usePathname } from 'src/routes/hooks';
+import { usePathname, useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { useResponsive } from 'src/hooks/use-responsive';
@@ -23,10 +24,28 @@ import Scrollbar from 'src/components/scrollbar';
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
 
+import { navConfigTwo } from './config-navigation';
+import Cookies from 'js-cookie';
+
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
+
+  const [user, setUser] = useState(null)
+  const router = useRouter();
+  
+  
+  useEffect(() => {
+    const authToken = Cookies.get("token");
+    const userData = JSON.parse(authToken);
+    if(!userData){
+      router.push('/login');
+    }
+    if(userData){
+      setUser(userData)
+    }
+  }, [])
 
   const upLg = useResponsive('up', 'lg');
 
@@ -36,6 +55,7 @@ export default function Nav({ openNav, onCloseNav }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
 
   const renderAccount = (
     <Box
@@ -53,7 +73,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Avatar src={account.photoURL} alt="photoURL" />
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.displayName}</Typography>
+      {user && <Typography variant="subtitle2">{user.name}</Typography>}
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {account.role}
@@ -65,6 +85,14 @@ export default function Nav({ openNav, onCloseNav }) {
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
       {navConfig.map((item) => (
+        <NavItem key={item.title} item={item} />
+      ))}
+    </Stack>
+  );
+
+  const renderMenuTwo = (
+    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+      {navConfigTwo.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
     </Stack>
@@ -114,7 +142,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
       {renderAccount}
 
-      {renderMenu}
+      {user && user.role === 'superAdmin' ? renderMenu : renderMenuTwo}
 
       <Box sx={{ flexGrow: 1 }} />
 

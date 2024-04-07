@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable */
+import { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -10,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 import { account } from 'src/_mock/account';
+import { useRouter } from 'src/routes/hooks';
+import Cookies from 'js-cookie';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +35,20 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+  const [user, setUser] = useState(null)
+  const router = useRouter();
+
+
+  useEffect(() => {
+    const authToken = Cookies.get("token");
+    const userData = JSON.parse(authToken);
+    if(!userData){
+      router.push('/login');
+    }
+    if(userData){
+      setUser(userData)
+    }
+  }, [])
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -39,6 +56,8 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
+    Cookies.remove('token')
+    window.location.href = '/login'
   };
 
   return (
@@ -83,24 +102,24 @@ export default function AccountPopover() {
           },
         }}
       >
-        <Box sx={{ my: 1.5, px: 2 }}>
+        {user && <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {user.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {user.email}
           </Typography>
-        </Box>
+        </Box>}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {MENU_OPTIONS.map((option) => (
+        {/* {MENU_OPTIONS.map((option) => (
           <MenuItem key={option.label} onClick={handleClose}>
             {option.label}
           </MenuItem>
-        ))}
+        ))} */}
 
-        <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
+        {/* <Divider sx={{ borderStyle: 'dashed', m: 0 }} /> */}
 
         <MenuItem
           disableRipple

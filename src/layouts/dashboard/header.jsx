@@ -1,3 +1,4 @@
+/* eslint-disable */
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -34,13 +35,13 @@ export default function Header({ onOpenNav }) {
         </IconButton>
       )}
 
-      <Searchbar />
+      {/* <Searchbar /> */}
 
       <Box sx={{ flexGrow: 1 }} />
 
       <Stack direction="row" alignItems="center" spacing={1}>
         {/* <LanguagePopover /> */}
-        <NotificationsPopover />
+        {/* <NotificationsPopover /> */}
         <AccountPopover />
       </Stack>
     </>

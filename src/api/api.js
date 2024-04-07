@@ -279,3 +279,51 @@ export const deleteSubCategory = async (id) => {
         throw error;
     }
 };
+
+export const signIn = async (data) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/users/login`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log(response.data)
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating product:', error);
+        throw error;
+    }
+};
+
+export const getProducts = async () => {
+    try {
+        const url = `${BASE_URL}/product/get`;
+
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error fetching submenus:', error);
+        throw error;
+    }
+};
+
+export const editProductAPI = async (productData) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/product/edit`, productData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating product:', error);
+        throw error;
+    }
+};

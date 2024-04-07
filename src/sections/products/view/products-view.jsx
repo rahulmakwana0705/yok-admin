@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
@@ -15,6 +15,9 @@ import Iconify from "src/components/iconify";
 import "./ProductsView.css";
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import NewProduct from "../NewProduct";
+import { getProducts } from "src/api/api";
+import ViewProduct from "./ViewProduct";
+import EditProduct from "./EditProduct";
 
 export default function ProductsView() {
   const [activeButton, setActiveButton] = useState("product");
@@ -25,21 +28,37 @@ export default function ProductsView() {
     setActiveButton("newProduct");
     // navigate('/product/add-product')
   };
-  const dummyProducts = [
-    { id: 1, product: 'Product A', price: '$20', quantity: 5, status: 'In Stock' },
-    { id: 2, product: 'Product B', price: '$25', quantity: 10, status: 'Out of Stock' },
-    { id: 3, product: 'Product C', price: '$30', quantity: 8, status: 'In Stock' },
-  ];
-  const handleView = (productId) => {
-    console.log(`View product with ID: ${productId}`);
+  const [products, setProducts] = useState(null)
+  const [clickedProduct, setClickedProduct] = useState(null)
+  useEffect(() => {
+    loadProducts()
+  }, [])
+
+  const loadProducts = async() => {
+    try{
+      const response = await getProducts()
+      setProducts(response?.data)
+      console.log('response products', response);
+    }catch(error){
+      console.log('error', error);
+    }
+  }
+
+  const dummyProducts = products;
+
+  const handleView = (product) => {
+    setClickedProduct(product)
+    setActiveButton("viewProduct")
   };
 
-  const handleEdit = (productId) => {
-    console.log(`Edit product with ID: ${productId}`);
+  const handleEdit = (product) => {
+    setClickedProduct(product)
+    setActiveButton("EditProduct")
+    console.log(`Edit product with ID: }`);
   };
 
-  const handleDelete = (productId) => {
-    console.log(`Delete product with ID: ${productId}`);
+  const handleDelete = (product) => {
+    console.log(`Delete product with ID: ${product}`);
   };
   const handleSearch = (event) => {
     console.log(event.target.value)
@@ -51,7 +70,7 @@ export default function ProductsView() {
   };
 
   const filteredProducts = dummyProducts
-    .filter((product) => {
+    ?.filter((product) => {
       const searchTermLower = searchTerm.toLowerCase();
       return Object.values(product).some(
         (value) => typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
@@ -158,29 +177,29 @@ export default function ProductsView() {
                 <tr>
                   <th>ID</th>
                   <th>Product</th>
+                  <th>Sale Price</th>
                   <th>Price</th>
                   <th>Quantity</th>
-                  <th>Status</th>
                   <th>Action</th> {/* You can replace this with the actual action column */}
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts && filteredProducts.length > 0 ? (
-                  filteredProducts.map((product) => (
+                  filteredProducts.map((product, i) => (
                     <tr key={product.id}>
-                      <td>{product.id}</td>
-                      <td>{product.product}</td>
+                      <td>{i+1}</td>
+                      <td>{product.name}</td>
+                      <td>{product.sale_price}</td>
                       <td>{product.price}</td>
                       <td>{product.quantity}</td>
-                      <td>{product.status}</td>
                       <td>
-                        <IconButton onClick={() => handleView(product.id)} title="View">
+                        <IconButton onClick={() => handleView(product)} title="View">
                           <VisibilityIcon />
                         </IconButton>
-                        <IconButton onClick={() => handleEdit(product.id)} title="Edit">
+                        <IconButton onClick={() => handleEdit(product)} title="Edit">
                           <EditIcon />
                         </IconButton>
-                        <IconButton onClick={() => handleDelete(product.id)} title="Delete">
+                        <IconButton onClick={() => handleDelete(product)} title="Delete">
                           <DeleteIcon />
                         </IconButton>
                       </td>
@@ -198,6 +217,8 @@ export default function ProductsView() {
         </div>
       )}
       {activeButton === "newProduct" && <NewProduct />}
+      {activeButton === "viewProduct" && <ViewProduct clickedProduct={clickedProduct}/>}
+      {activeButton === "EditProduct" && <EditProduct clickedProduct={clickedProduct}/>}
     </Container>
   );
 }

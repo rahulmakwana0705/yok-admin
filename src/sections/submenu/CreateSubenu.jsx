@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react';
 import { TextField, Button, Container, Grid, Typography } from '@mui/material';
 import { creteSubmenu } from 'src/api/api';

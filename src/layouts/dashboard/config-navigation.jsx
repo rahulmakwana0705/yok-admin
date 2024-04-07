@@ -157,4 +157,17 @@ const navConfig = [
   // },
 ];
 
+export const navConfigTwo = [
+  {
+    title: 'dashboard',
+    path: '/',
+    icon: icon('ic_analytics'),
+  },
+  {
+    title: 'product',
+    path: '/products',
+    icon: icon('ic_cart'),
+  },
+];
+
 export default navConfig;
