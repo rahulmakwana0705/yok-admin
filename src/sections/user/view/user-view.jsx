@@ -137,8 +137,8 @@ export default function UserPage() {
                   <th>#</th>
                   <th>Name</th>
                   <th>Email address</th>
-                  <th>Phone</th>
-                  <th>Number of Orders</th>
+                  {/* <th>Phone</th>
+                  <th>Number of Orders</th> */}
                   <th>Action</th>
                 </tr>
               </thead>
@@ -149,15 +149,15 @@ export default function UserPage() {
                       <td>{product.id}</td>
                       <td>{product.name}</td>
                       <td>{product.email}</td>
-                      <td>{product.phone}</td>
-                      <td>{product.numberOfOrders}</td>
+                      {/* <td>{product.phone}</td>
+                      <td>{product.numberOfOrders}</td> */}
                       <td>
-                        <IconButton onClick={() => handleView(product.id)} title="View">
+                        {/* <IconButton onClick={() => handleView(product.id)} title="View">
                           <VisibilityIcon />
                         </IconButton>
                         <IconButton onClick={() => handleEdit(product.id)} title="Edit">
                           <EditIcon />
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton onClick={() => handleDelete(product.id)} title="Delete">
                           <DeleteIcon />
                         </IconButton>

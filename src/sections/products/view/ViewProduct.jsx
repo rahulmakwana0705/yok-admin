@@ -55,7 +55,7 @@ const ViewProduct = ({clickedProduct}) => {
 
 
   console.log('tags', tags);
-  console.log('color', color);
+  console.log('productData', productData);
   console.log('variations', variations);
 
   const handleTagChange = (name, event) => {
@@ -195,54 +195,8 @@ const ViewProduct = ({clickedProduct}) => {
     }
   };
 
-  const handleCreateProduct = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("image", productData.image);
-      formData.append("name", productData.name);
-      formData.append("slug", productData.slug);
-      formData.append("sku", productData.sku);
-      formData.append("description", productData.description);
-      formData.append("price", productData.price);
-      formData.append("sale_price", productData.sale_price);
-      formData.append("quantity", productData.quantity);
-      formData.append("category", JSON.stringify(productData.category));
-      formData.append("tags", JSON.stringify(productData.tags));
-      formData.append("gender", JSON.stringify(productData.gender));
-      formData.append("variations", JSON.stringify(productData.variations));
-      formData.append("meta", JSON.stringify(productData.meta));
-      formData.append("type", productData.type);
-
-      productData.gallery.forEach((image, index) => {
-        formData.append(`gallery`, image);
-      });
-
-      const response = await createProductAPI(formData);
-      console.log("Product created successfully:", response);
-      if(response){
-        navigate('/products')
-      }
-    } catch (error) {
-      console.error("Error creating product:", error);
-    }
-  };
 
   useEffect(() => {
-    // name: "",
-    // slug: "",
-    // sku: "N/A",
-    // description: "",
-    // price: "",
-    // sale_price: "",
-    // quantity: "",
-    // category: { id: 1, name: "kids", slug: "kids" },
-    // tags: [],
-    // image: null,
-    // gallery: [],
-    // variations: [],
-    // meta: [],
-    // gender: [],
-    // type: "Normal",
     setColor(
         clickedProduct?.variations
           .map((color) => {
@@ -308,8 +262,9 @@ const ViewProduct = ({clickedProduct}) => {
               name="name"
               value={productData?.name}
               onChange={handleChange}
-              aria-readonly
+              disabled
             />
+             
           </div>
 
           {/* <div className="mt-4">
@@ -335,47 +290,21 @@ const ViewProduct = ({clickedProduct}) => {
             </FormControl>
           </div> */}
           <div className="mt-4">
-            <textarea
+             <textarea
               style={{ height: "80px" }}
               className="create-product-input-box"
-              placeholder="Description"
-              label="Description"
-              name="description"
+              placeholder="Customer Reviews"
+              label="Customer Reviews"
+              name="customerReviews"
               value={productData?.description}
-              onChange={handleChange}
+              onChange={handleInputChange}
+              disabled
             ></textarea>
           </div>
 
           <div className="mt-3">
             <div className="Neon Neon-theme-dragdropbox">
-              <input
-                style={{
-                  opacity: 0,
-                  width: "100%",
-                  height: "99px",
-                  position: "absolute",
-                  right: "0px",
-                  left: "0px",
-                }}
-                accept="image/*"
-                id="image-upload"
-                multiple="false"
-                name="image"
-                type="file"
-                onChange={handleInputChange}
-              />
               <div className="Neon-input-dragDrop">
-                <div className="Neon-input-inner">
-                  <div className="Neon-input-icon">
-                    <i className="fa fa-file-image-o"></i>
-                  </div>
-                  <div className="Neon-input-text">
-                    <h3>Upload an image</h3>{" "}
-                  </div>
-                  <a className="Neon-input-choose-btn blue">
-                    Click to upload image
-                  </a>
-                </div>
                 {productData.image && (
                   <div>
                     <Typography variant="subtitle1">Selected Image:</Typography>
@@ -392,22 +321,6 @@ const ViewProduct = ({clickedProduct}) => {
 
           <div className="mt-3">
             <div className="Neon Neon-theme-dragdropbox">
-              <input
-                style={{
-                  opacity: 0,
-                  width: "100%",
-                  height: "99px",
-                  position: "absolute",
-                  right: "0px",
-                  left: "0px",
-                }}
-                accept="image/*"
-                id="gallery-upload"
-                multiple="multiple"
-                name="gallery"
-                type="file"
-                onChange={handleInputChange}
-              />
               <div className="Neon-input-dragDrop">
                 <div className="Neon-input-inner">
                   <div className="Neon-input-icon">
@@ -416,17 +329,9 @@ const ViewProduct = ({clickedProduct}) => {
                   <div className="Neon-input-text">
                     <h3>Gallery</h3>{" "}
                   </div>
-                  <a className="Neon-input-choose-btn blue">
-                    Click to upload image
-                  </a>
                 </div>
-              </div>
-            </div>
-            {productData.gallery.length > 0 && (
+                {productData.gallery.length > 0 && (
               <div>
-                <Typography variant="subtitle1">
-                  Selected Gallery Images:
-                </Typography>
                 {productData.gallery.map((image, index) => (
                   <img
                     key={index}
@@ -441,6 +346,9 @@ const ViewProduct = ({clickedProduct}) => {
                 ))}
               </div>
             )}
+              </div>
+            </div>
+            
           </div>
         </div>
       </div>
@@ -460,6 +368,7 @@ const ViewProduct = ({clickedProduct}) => {
               name="price"
               value={productData.price}
               onChange={handleChange}
+              disabled
             />
           </div>
 
@@ -472,6 +381,7 @@ const ViewProduct = ({clickedProduct}) => {
               name="sale_price"
               value={productData.sale_price}
               onChange={handleChange}
+              disabled
             />
           </div>
 
@@ -484,6 +394,7 @@ const ViewProduct = ({clickedProduct}) => {
               name="quantity"
               value={productData.quantity}
               onChange={handleChange}
+              disabled
             />
           </div>
         </div>
@@ -507,6 +418,7 @@ const ViewProduct = ({clickedProduct}) => {
                 input={<OutlinedInput label="Colors" />}
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
+                disabled  
               >
                 {colorsValue.map((name) => (
                   <MenuItem key={name} value={name}>
@@ -532,6 +444,7 @@ const ViewProduct = ({clickedProduct}) => {
                 input={<OutlinedInput label="Variations" />}
                 renderValue={(selected) => selected.join(", ")}
                 MenuProps={MenuProps}
+                disabled  
               >
                 {variationsValue.map((name) => (
                   <MenuItem key={name} value={name}>
@@ -551,21 +464,19 @@ const ViewProduct = ({clickedProduct}) => {
                 label="Male"
                 name="Male"
                 checked={productData.gender.includes("Male")}
-                onChange={handleCheckboxChange}
+                // category
               />
               <FormControlLabel
                 control={<Checkbox />}
                 label="Women"
                 name="Women"
                 checked={productData.gender.includes("Women")}
-                onChange={handleCheckboxChange}
               />
               <FormControlLabel
                 control={<Checkbox />}
                 label="Kids"
                 name="Kids"
                 checked={productData.gender.includes("Kids")}
-                onChange={handleCheckboxChange}
               />
             </div>
           </div>
@@ -581,17 +492,17 @@ const ViewProduct = ({clickedProduct}) => {
               >
                 <FormControlLabel
                   value="Normal"
-                  control={<Radio />}
+                  control={<Radio disabled/>}
                   label="Normal"
                 />
                 <FormControlLabel
                   value="Custom"
-                  control={<Radio />}
+                  control={<Radio disabled/>}
                   label="Custom"
                 />
                 <FormControlLabel
                   value="Combo"
-                  control={<Radio />}
+                  control={<Radio disabled/>}
                   label="Combo"
                 />
               </RadioGroup>
@@ -609,6 +520,7 @@ const ViewProduct = ({clickedProduct}) => {
                 productData?.meta.find((val) => val.title === 'productDetails')?.content || ""
               }
               onChange={handleInputChange}
+              disabled
             ></textarea>
           </div>
 
@@ -623,6 +535,7 @@ const ViewProduct = ({clickedProduct}) => {
                 productData?.meta.find((val) => val.title === "additionalInformation")?.content || ""
               }
               onChange={handleInputChange}
+              disabled
             ></textarea>
           </div>
 
@@ -637,11 +550,11 @@ const ViewProduct = ({clickedProduct}) => {
                 productData?.meta.find((val) => val.title === "customerReviews")?.content || ""
               }
               onChange={handleInputChange}
+              disabled
             ></textarea>
           </div>
         </div>
       </div>
-
     </div>
   );
 };

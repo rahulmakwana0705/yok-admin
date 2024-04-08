@@ -15,7 +15,7 @@ import Iconify from "src/components/iconify";
 import "./ProductsView.css";
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import NewProduct from "../NewProduct";
-import { deleteProductAPI, getProducts } from "src/api/api";
+import { getProducts, deleteProductAPI } from "src/api/api";
 import ViewProduct from "./ViewProduct";
 import EditProduct from "./EditProduct";
 
@@ -58,9 +58,11 @@ export default function ProductsView() {
   };
 
   const handleDelete = async(product) => {
+    console.log('dlete', product._id);
     try{
-      const response = await deleteProductAPI()
+      const response = await deleteProductAPI({productId: product._id})
       console.log('response delete', response);
+      setProducts(products.filter((pro) => pro._id !== product._id))
     }catch(error){
       console.log('error on delete ptoduct ', error);
     }
