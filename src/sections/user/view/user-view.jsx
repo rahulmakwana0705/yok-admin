@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
@@ -15,6 +15,7 @@ import Iconify from "src/components/iconify";
 import './userView.css'
 
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { deleteUser, getAllUsers } from "src/api/api";
 
 // ----------------------------------------------------------------------
 
@@ -22,34 +23,24 @@ export default function UserPage() {
   const [activeButton, setActiveButton] = useState("product");
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('');
-  const handleNewProductButtonClick = () => {
-    console.log("cli");
-    setActiveButton("newProduct");
-    // navigate('/product/add-product')
-  };
-  const dummyData = [
-    {
-      id: 1,
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      phone: '+1234567890',
-      numberOfOrders: 10,
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      phone: '+9876543210',
-      numberOfOrders: 5,
-    },
-    {
-      id: 3,
-      name: 'Bob Johnson',
-      email: 'bob.johnson@example.com',
-      phone: '+1122334455',
-      numberOfOrders: 15,
-    },
-  ];
+
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const loadUsers = async() => {
+      try{
+        const response = await getAllUsers()
+        setUser(response?.users.filter((u) => u.email !== "admin@gmail.com" && u.email !== "superadmin@gmail.com"))
+
+        console.log('response', response);
+      }catch(error){
+        console.log('error', error);
+      }
+    }
+    loadUsers()
+  }, [])
+
+  const dummyData = user
 
   
   const handleView = (productId) => {
@@ -60,8 +51,15 @@ export default function UserPage() {
     console.log(`Edit product with ID: ${productId}`);
   };
 
-  const handleDelete = (productId) => {
-    console.log(`Delete product with ID: ${productId}`);
+  const handleDelete = async(id) => {
+    console.log(`Delete product with ID: ${id}`);
+    try{
+      const response = await deleteUser({userId: id})
+      console.log('response delete', response);
+      setUser(user.filter((pro) => pro._id !== id))
+    }catch(error){
+      console.log('error on delete ptoduct ', error);
+    }
   };
   const handleSearch = (event) => {
     console.log(event.target.value)
@@ -73,7 +71,7 @@ export default function UserPage() {
   };
 
   const filteredProducts = dummyData
-    .filter((product) => {
+    ?.filter((product) => {
       const searchTermLower = searchTerm.toLowerCase();
       return Object.values(product).some(
         (value) => typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
@@ -144,9 +142,9 @@ export default function UserPage() {
               </thead>
               <tbody>
                 {filteredProducts && filteredProducts.length > 0 ? (
-                  filteredProducts.map((product) => (
+                  filteredProducts.map((product, i) => (
                     <tr key={product.id}>
-                      <td>{product.id}</td>
+                      <td>{i+1}</td>
                       <td>{product.name}</td>
                       <td>{product.email}</td>
                       {/* <td>{product.phone}</td>
@@ -158,7 +156,7 @@ export default function UserPage() {
                         <IconButton onClick={() => handleEdit(product.id)} title="Edit">
                           <EditIcon />
                         </IconButton> */}
-                        <IconButton onClick={() => handleDelete(product.id)} title="Delete">
+                        <IconButton onClick={() => handleDelete(product._id)} title="Delete">
                           <DeleteIcon />
                         </IconButton>
                       </td>

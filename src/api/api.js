@@ -342,3 +342,33 @@ export const deleteProductAPI = async (productData) => {
         throw error;
     }
 };
+
+export const getAllUsers = async () => {
+    try {
+        const response = await axios.get(`${BASE_URL}/users/get`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating product:', error);
+        throw error;
+    }
+};
+
+export const deleteUser = async (data) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/users/delete`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating product:', error);
+        throw error;
+    }
+};
