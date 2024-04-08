@@ -308,6 +308,7 @@ const ViewProduct = ({clickedProduct}) => {
               name="name"
               value={productData?.name}
               onChange={handleChange}
+              aria-readonly
             />
           </div>
 
@@ -641,15 +642,6 @@ const ViewProduct = ({clickedProduct}) => {
         </div>
       </div>
 
-      <div className="create-product-button-yok">
-        <Button
-          onClick={handleCreateProduct}
-          variant="contained"
-          color="inherit"
-        >
-          Create Product
-        </Button>
-      </div>
     </div>
   );
 };

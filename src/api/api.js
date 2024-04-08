@@ -327,3 +327,18 @@ export const editProductAPI = async (productData) => {
         throw error;
     }
 };
+
+export const deleteProductAPI = async (productData) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/product/delete`, productData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating product:', error);
+        throw error;
+    }
+};
