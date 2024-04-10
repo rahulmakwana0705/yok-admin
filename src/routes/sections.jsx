@@ -101,7 +101,7 @@ export default function Router() {
       ] : []
     },
     {
-      path: "login",
+      path: "",
       element: <LoginPage />,
     },
     {
