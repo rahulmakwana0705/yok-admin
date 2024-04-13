@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/api';
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
 
 export const createProductAPI = async (productData) => {
     try {
@@ -282,6 +283,8 @@ export const deleteSubCategory = async (id) => {
 
 export const signIn = async (data) => {
     try {
+        console.log(BASE_URL)
+
         const response = await axios.post(`${BASE_URL}/users/login`, data, {
             headers: {
                 'Content-Type': 'application/json',

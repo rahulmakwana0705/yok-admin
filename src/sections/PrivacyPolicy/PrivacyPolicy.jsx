@@ -7,6 +7,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
 import { fetchPrivacyPolicy } from "src/api/api";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function PrivacyPolicy() {
   const [editorValue, setEditorValue] = useState("");
@@ -50,7 +51,7 @@ export default function PrivacyPolicy() {
 
       const response = await axios({
         method: method,
-        url: `http://localhost:3000/api/policy/${apiEndpoint}`,
+        url: `${BASE_URL}/policy/${apiEndpoint}`,
         headers: {
           "Content-Type": "application/json",
         },
