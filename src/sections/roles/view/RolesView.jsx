@@ -1,5 +1,7 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -7,158 +9,169 @@ import Typography from "@mui/material/Typography";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+
 import Iconify from "src/components/iconify";
-import { Box, IconButton, TextField, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+
 import "./RolesView.css";
 
-export default function RolesView() {
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { deleteUser, getAllUsers } from "src/api/api";
 
-    const dummyReviews = [
-        { id: 1, product: 'Product A', rating: 4.5, customer: 'John Doe', comment: 'Great product!', published: true },
-        { id: 2, product: 'Product B', rating: 3.8, customer: 'Jane Doe', comment: 'Could be better.', published: true },
-        { id: 3, product: 'Product C', rating: 5.0, customer: 'Alice Smith', comment: 'Excellent!', published: false },
-    ];
+// ----------------------------------------------------------------------
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [sortOption, setSortOption] = useState('');
+export default function UserPage() {
+  const [activeButton, setActiveButton] = useState("product");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOption, setSortOption] = useState('');
 
-    const handleView = (reviewId) => {
-        console.log(`View review with ID: ${reviewId}`);
-    };
+  const [user, setUser] = useState(null)
 
-    const handleEdit = (reviewId) => {
-        console.log(`Edit review with ID: ${reviewId}`);
-    };
+  useEffect(() => {
+    const loadUsers = async() => {
+      try{
+        const response = await getAllUsers()
+        setUser(response?.users.filter((u) => u.role === "admin" || u.role === "superAdmin"))
 
-    const handleDelete = (reviewId) => {
-        console.log(`Delete review with ID: ${reviewId}`);
-    };
+        console.log('response', response);
+      }catch(error){
+        console.log('error', error);
+      }
+    }
+    loadUsers()
+  }, [])
 
-    const handleSearch = (event) => {
-        setSearchTerm(event.target.value);
-    };
+  const dummyData = user
 
-    const handleSort = (event) => {
-        setSortOption(event.target.value);
-    };
+  
+  const handleView = (productId) => {
+    console.log(`View product with ID: ${productId}`);
+  };
 
-    const filteredReviews = dummyReviews
-        .filter((review) => {
-            const searchTermLower = searchTerm.toLowerCase();
-            return Object.values(review).some(
-                (value) => typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
-            );
-        })
-        .sort((a, b) => {
-            if (sortOption === 'RatingHighToLow') {
-                return a.rating > b.rating ? -1 : 1;
-            } else if (sortOption === 'RatingLowToHigh') {
-                return a.rating < b.rating ? -1 : 1;
-            } else if (sortOption === 'Published') {
-                return a.published ? -1 : 1;
-            }
-            return 0;
-        });
+  const handleEdit = (productId) => {
+    console.log(`Edit product with ID: ${productId}`);
+  };
 
-    return (
-        <Container>
-            <div>
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    mb={5}
-                >
-                    <Typography variant="h4">Roles</Typography>
-                </Stack>
+  const handleDelete = async(id) => {
+    console.log(`Delete product with ID: ${id}`);
+    try{
+      const response = await deleteUser({userId: id})
+      console.log('response delete', response);
+      setUser(user.filter((pro) => pro._id !== id))
+    }catch(error){
+      console.log('error on delete ptoduct ', error);
+    }
+  };
+  const handleSearch = (event) => {
+    console.log(event.target.value)
+    setSearchTerm(event.target.value);
+  };
 
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    spacing={2}
-                    mb={5}
-                >
-                    {/* Search TextField */}
-                    <Box
-                        sx={{
-                            width: '50%',
-                            '& .MuiFormControl-root': {
-                                width: '100%',
-                            },
-                        }}
-                    >
-                        <TextField
-                            fullWidth
-                            label="Search"
-                            id="fullWidth"
-                            value={searchTerm}
-                            onChange={handleSearch}
-                            variant="outlined"
-                            margin="dense"
-                        />
-                    </Box>
+  const handleSort = (event) => {
+    setSortOption(event.target.value);
+  };
 
-                    {/* Sort By Dropdown */}
-                    <FormControl variant="outlined" sx={{ width: '50%', minWidth: 120 }}>
-                        <InputLabel>Sort By</InputLabel>
-                        <Select
-                            value={sortOption}
-                            onChange={handleSort}
-                            label="Sort By"
-                        >
-                            {/* Dummy Options */}
-                            <MenuItem value="" disabled>
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value="RatingHighToLow">Rating (High &gt; Low)</MenuItem>
-                            <MenuItem value="RatingLowToHigh">Rating (Low &gt; High)</MenuItem>
-                            <MenuItem value="Published">Published</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Stack>
+  const filteredProducts = dummyData
+    ?.filter((product) => {
+      const searchTermLower = searchTerm.toLowerCase();
+      return Object.values(product).some(
+        (value) => typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
+      );
+    })
+    .sort((a, b) => {
+      if (sortOption === 'RatingHighToLow') {
+        return a.price > b.price ? -1 : 1;
+      } else if (sortOption === 'RatingLowToHigh') {
+        return a.price < b.price ? -1 : 1;
+      } else if (sortOption === 'NumOfSaleHighToLow') {
+        return b.quantity - a.quantity;
+      } else if (sortOption === 'NumOfSaleLowToHigh') {
+        return a.quantity - b.quantity;
+      } else if (sortOption === 'BasePriceHighToLow') {
+        return a.price > b.price ? -1 : 1;
+      } else if (sortOption === 'BasePriceLowToHigh') {
+        return a.price < b.price ? -1 : 1;
+      }
+      return 0;
+    });
 
-                <div className="table-container">
-                    <table className="review-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Role</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredReviews && filteredReviews.length > 0 ? (
-                                filteredReviews.map((review) => (
-                                    <tr key={review.id}>
-                                        <td>{review.id}</td>
-                                        <td>{review.product}</td>
-                                        <td>{review.rating}</td>
-                                        <td>{review.published ? 'Yes' : 'No'}</td>
-                                        <td>
-                                            <IconButton onClick={() => handleView(review.id)} title="View">
-                                                <VisibilityIcon />
-                                            </IconButton>
-                                            <IconButton onClick={() => handleEdit(review.id)} title="Edit">
-                                                <EditIcon />
-                                            </IconButton>
-                                            <IconButton onClick={() => handleDelete(review.id)} title="Delete">
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="7">No reviews found</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </Container>
-    );
+  return (
+    <Container>
+      <div>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            mb={5}
+          >
+            <Typography variant="h4">User</Typography>
+
+          </Stack>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            spacing={2}
+            mb={5}
+          >
+            <Box
+              sx={{
+                width: '50%',
+              }}
+            >
+              <TextField
+                fullWidth
+                label="Search (Email, name...)"
+                id="fullWidth"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </Box>
+          </Stack>
+
+          <div className="table-container">
+            <table className="product-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Email address</th>
+                  {/* <th>Phone</th>
+                  <th>Number of Orders</th> */}
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredProducts && filteredProducts.length > 0 ? (
+                  filteredProducts.map((product, i) => (
+                    <tr key={product.id}>
+                      <td>{i+1}</td>
+                      <td>{product.name}</td>
+                      <td>{product.email}</td>
+                      {/* <td>{product.phone}</td>
+                      <td>{product.numberOfOrders}</td> */}
+                      <td>
+                        {/* <IconButton onClick={() => handleView(product.id)} title="View">
+                          <VisibilityIcon />
+                        </IconButton>
+                        <IconButton onClick={() => handleEdit(product.id)} title="Edit">
+                          <EditIcon />
+                        </IconButton> */}
+                        <IconButton onClick={() => handleDelete(product._id)} title="Delete">
+                          <DeleteIcon />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6">No products found</td>
+                  </tr>
+                )}
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+    </Container>
+  );
 }
