@@ -38,6 +38,7 @@ export const BannerPage = lazy(() => import("src/pages/BannerPage"));
 export const Page404 = lazy(() => import("src/pages/page-not-found"));
 
 import { useRouter } from "src/routes/hooks";
+import B2B from "src/sections/B2B/B2B";
 
 // ----------------------------------------------------------------------
 
@@ -73,6 +74,7 @@ export default function Router() {
         { element: <IndexPage />, index: true },
         { path: "user", element: <UserPage /> },
         { path: "products", element: <ProductsPage /> },
+        { path: "b2b", element: <B2B /> },
         { path: "Banner", element: <BannerPage /> },
         { path: "blog", element: <BlogPage /> },
         { path: "order", element: <OrderPage /> },

@@ -39,9 +39,7 @@ export default function DiscountCouponsView() {
     status: "",
   });
   const handleNewProductButtonClick = () => {
-    console.log("cli");
     setActiveButton("newProduct");
-    // navigate('/product/add-product')
   };
   const dummyCoupons = [
     {
@@ -309,15 +307,14 @@ export default function DiscountCouponsView() {
           </div>
         </div>
       )}
-      <form>
+      {activeButton === "newProduct" && (<form>
         <Stack
           direction="row"
           alignItems="center"
           justifyContent="space-between"
-          spacing={2} // Add some gap between the components
+          spacing={2}
           mb={5}
         >
-          {/* Add form fields for new coupon */}
           <TextField
             label="Coupon"
             value={newCouponForm.coupon}
@@ -358,7 +355,7 @@ export default function DiscountCouponsView() {
         >
           Add Coupon
         </Button>
-      </form>
+      </form>)}
     </Container>
   );
 }

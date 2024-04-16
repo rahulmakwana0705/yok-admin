@@ -30,7 +30,7 @@ export default function UserPage() {
     const loadUsers = async() => {
       try{
         const response = await getAllUsers()
-        setUser(response?.users.filter((u) => u.email !== "admin@gmail.com" && u.email !== "superadmin@gmail.com"))
+        setUser(response?.users.filter((u) => u.role !== "admin" && u.role !== "superAdmin"))
 
         console.log('response', response);
       }catch(error){

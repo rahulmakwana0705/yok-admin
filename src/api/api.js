@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
-
 export const createProductAPI = async (productData) => {
     try {
         const response = await axios.post(`${BASE_URL}/product/create`, productData, {
@@ -372,6 +371,23 @@ export const deleteUser = async (data) => {
         return response.data;
     } catch (error) {
         console.error('Error creating product:', error);
+        throw error;
+    }
+};
+
+export const getB2B = async () => {
+    try {
+        const url = `${BASE_URL}/b2b/get`;
+
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error fetching submenus:', error);
         throw error;
     }
 };

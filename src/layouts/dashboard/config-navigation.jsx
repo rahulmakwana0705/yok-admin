@@ -17,6 +17,7 @@ import ChecklistTwoToneIcon from '@mui/icons-material/ChecklistTwoTone';
 import SecurityTwoToneIcon from '@mui/icons-material/SecurityTwoTone';
 import GroupsTwoToneIcon from '@mui/icons-material/GroupsTwoTone';
 import FilterBAndWTwoToneIcon from '@mui/icons-material/FilterBAndWTwoTone';
+import HandshakeTwoToneIcon from '@mui/icons-material/HandshakeTwoTone';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,11 @@ const navConfig = [
     title: 'product',
     path: '/products',
     icon: icon('ic_cart'),
+  },
+  {
+    title: 'B2B',
+    path: '/b2b',
+    icon: <HandshakeTwoToneIcon />,
   },
   {
     title: 'Banner',
@@ -115,11 +121,11 @@ const navConfig = [
     path: '/faq',
     icon: <LiveHelpTwoToneIcon />,
   },
-  {
-    title: 'Rating Approval',
-    path: '/rating-approval',
-    icon: <ThumbUpTwoToneIcon />,
-  },
+  // {
+  //   title: 'Rating Approval',
+  //   path: '/rating-approval',
+  //   icon: <ThumbUpTwoToneIcon />,
+  // },
   {
     title: 'Terms and Conditions',
     path: '/terms-and-conditions',
