@@ -391,3 +391,71 @@ export const getB2B = async () => {
         throw error;
     }
 };
+
+export const createCoupons = async (data) => {
+    try {
+        const url = `${BASE_URL}/coupons/create`;
+
+        const response = await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error fetching submenus:', error);
+        throw error;
+    }
+};
+
+export const getCoupons = async () => {
+    try {
+        const url = `${BASE_URL}/coupons/get`;
+
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error fetching submenus:', error);
+        throw error;
+    }
+};
+
+export const editCoupons = async (data) => {
+    try {
+        const url = `${BASE_URL}/coupons/edit`;
+
+        const response = await axios.put(url, data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error fetching submenus:', error);
+        throw error;
+    }
+};
+
+export const deleteCoupons = async (data) => {
+    try {
+        const url = `${BASE_URL}/coupons/delete`;
+
+        const response = await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error fetching submenus:', error);
+        throw error;
+    }
+};

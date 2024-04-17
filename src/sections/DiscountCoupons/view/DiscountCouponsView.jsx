@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -24,6 +24,9 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import NewDiscountCoupon from "./NewDiscountCoupon";
+import { deleteCoupons, getCoupons } from "src/api/api";
+import EditViewDiscountCoupon from "./EditViewDiscountCoupon";
 // import NewProduct from "../NewProduct";
 
 export default function DiscountCouponsView() {
@@ -38,112 +41,58 @@ export default function DiscountCouponsView() {
     quantity: "",
     status: "",
   });
+
+  const [coupons, setCoupons] = useState(null)
+  const [clickedCoupon, setClickedCoupon] = useState(null)
+
+  useEffect(() => {
+    loadCoupons();
+  }, []);
+
+  const loadCoupons = async () => {
+    try {
+      const response = await getCoupons();
+      console.log("response", response);
+      setCoupons(response?.data?.coupons)
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   const handleNewProductButtonClick = () => {
     setActiveButton("newProduct");
   };
-  const dummyCoupons = [
-    {
-      id: 1,
-      coupon: "YOK10",
-      startDate: "2022-01-01",
-      endDate: "2022-01-31",
-      discount: "10%",
-      quantity: 50,
-      status: "Active",
-    },
-    {
-      id: 2,
-      coupon: "NEWUSER",
-      startDate: "2022-02-01",
-      endDate: "2022-02-28",
-      discount: "20%",
-      quantity: 30,
-      status: "Inactive",
-    },
-    {
-      id: 3,
-      coupon: "GRAB10",
-      startDate: "2022-03-01",
-      endDate: "2022-03-31",
-      discount: "15%",
-      quantity: 25,
-      status: "Active",
-    },
-    {
-      id: 4,
-      coupon: "FESTOFF",
-      startDate: "2022-04-01",
-      endDate: "2022-04-30",
-      discount: "12%",
-      quantity: 40,
-      status: "Inactive",
-    },
-    {
-      id: 5,
-      coupon: "Coupon",
-      startDate: "2022-05-01",
-      endDate: "2022-05-31",
-      discount: "18%",
-      quantity: 20,
-      status: "Active",
-    },
-    {
-      id: 6,
-      coupon: "AXY",
-      startDate: "2022-06-01",
-      endDate: "2022-06-30",
-      discount: "25%",
-      quantity: 15,
-      status: "Inactive",
-    },
-    {
-      id: 7,
-      coupon: "KASJUD",
-      startDate: "2022-07-01",
-      endDate: "2022-07-31",
-      discount: "30%",
-      quantity: 10,
-      status: "Active",
-    },
-    {
-      id: 8,
-      coupon: "IUAUS",
-      startDate: "2022-08-01",
-      endDate: "2022-08-31",
-      discount: "22%",
-      quantity: 35,
-      status: "Inactive",
-    },
-    {
-      id: 9,
-      coupon: "dksIJKds",
-      startDate: "2022-09-01",
-      endDate: "2022-09-30",
-      discount: "17%",
-      quantity: 28,
-      status: "Active",
-    },
-    {
-      id: 10,
-      coupon: "NEWCOLL",
-      startDate: "2022-10-01",
-      endDate: "2022-10-31",
-      discount: "14%",
-      quantity: 22,
-      status: "Inactive",
-    },
-  ];
+  const dummyCoupons = coupons
+
+
   const handleView = (productId) => {
+    setClickedCoupon(productId)
+    setActiveButton('view')
     console.log(`View product with ID: ${productId}`);
   };
 
   const handleEdit = (productId) => {
+    setClickedCoupon(productId)
+    setActiveButton('edit')
     console.log(`Edit product with ID: ${productId}`);
   };
 
-  const handleDelete = (productId) => {
-    console.log(`Delete product with ID: ${productId}`);
+  const handleDelete = async(product) => {
+    try {
+      const response = await deleteCoupons({_id: product?._id});
+      console.log("response", response);
+      console.log("response", product);
+      if(response?.data?.message === 'Coupon deleted successfully'){
+        const filteredData = coupons.filter((c) => c._id !== product?._id)
+        console.log('filteredData', filteredData);
+        setCoupons(filteredData)
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   };
+console.log('coupons', coupons);
+
   const handleSearch = (event) => {
     console.log(event.target.value);
     setSearchTerm(event.target.value);
@@ -168,7 +117,7 @@ export default function DiscountCouponsView() {
   };
 
   const filteredProducts = dummyCoupons
-    .filter((product) => {
+    ?.filter((product) => {
       const searchTermLower = searchTerm.toLowerCase();
       return Object.values(product).some(
         (value) =>
@@ -177,6 +126,27 @@ export default function DiscountCouponsView() {
       );
     })
     .sort(sortProducts);
+
+  const sendUpdatedDataToParent = (data) => {
+    coupons.map((c) => {
+      if(c._id === data._id){
+          c.name= data.name,
+          c.type= data.type,
+          c.discount= data.discount,
+          c.minimumQuantity= data.minimumQuantity
+      }
+    })
+  }
+
+  const createDataForCoupon = (data) => {
+    console.log('data to add', data);
+    setCoupons([...coupons, {
+      name: data.name,
+      type: data.type,
+      discount: data.discount,
+      minimumQuantity: data.minimumQuantity
+    }]);
+  }
 
   return (
     <Container>
@@ -203,13 +173,12 @@ export default function DiscountCouponsView() {
             direction="row"
             alignItems="center"
             justifyContent="space-between"
-            spacing={2} // Add some gap between the components
+            spacing={2} 
             mb={5}
           >
-            {/* Search TextField */}
             <Box
               sx={{
-                width: "50%", // Set width to 50%
+                width: "50%", 
               }}
             >
               <TextField
@@ -218,36 +187,18 @@ export default function DiscountCouponsView() {
                 id="fullWidth"
                 value={searchTerm}
                 onChange={handleSearch}
-              // InputProps={{
-              //   startAdornment: (
-              //     <InputAdornment position="start">
-              //       {/* Add your search icon here */}
-              //       <SearchIcon />
-              //     </InputAdornment>
-              //   ),
-              // }}
+                // InputProps={{
+                //   startAdornment: (
+                //     <InputAdornment position="start">
+                //       {/* Add your search icon here */}
+                //       <SearchIcon />
+                //     </InputAdornment>
+                //   ),
+                // }}
               />
             </Box>
 
             {/* Sort By Dropdown */}
-            <FormControl
-              variant="outlined"
-              sx={{ width: "50%", minWidth: 120 }}
-            >
-              <InputLabel id="sort-by-label">Sort By</InputLabel>
-              <Select
-                labelId="sort-by-label"
-                id="sort-by"
-                label="Sort By"
-                value={sortOption}
-                onChange={handleSort}
-              >
-                <MenuItem value="RatingHighToLow">ID (Low to High)</MenuItem>
-                <MenuItem value="RatingLowToHigh">ID (High to Low)</MenuItem>
-                <MenuItem value="DiscountLowToHigh">Discount (High to Low)</MenuItem>
-                <MenuItem value="DiscountHighToLow">Discount (Low to High)</MenuItem>
-              </Select>
-            </FormControl>
           </Stack>
           <div className="table-container">
             <table className="product-table">
@@ -255,41 +206,36 @@ export default function DiscountCouponsView() {
                 <tr>
                   <th>ID</th>
                   <th>Coupon</th>
-                  {/* <th>Minimum Amount</th> */}
-                  <th>Start Date</th>
-                  <th>End Date</th>
+                  <th>Type</th>
                   <th>Discount</th>
-                  <th>Quantity</th>
-                  <th>Status</th>
+                  <th>Minimum Quantity</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts && filteredProducts.length > 0 ? (
-                  filteredProducts.map((product) => (
-                    <tr key={product.id}>
-                      <td>{product.id}</td>
-                      <td>{product.coupon}</td>
-                      <td>{product.startDate}</td>
-                      <td>{product.endDate}</td>
+                  filteredProducts.map((product, i) => (
+                    <tr key={i}>
+                      <td>{i+1}</td>
+                      <td>{product.name}</td>
+                      <td>{product.type}</td>
                       <td>{product.discount}</td>
-                      <td>{product.quantity}</td>
-                      <td>{product.status}</td>
+                      <td>{product.minimumQuantity}</td>
                       <td>
                         <IconButton
-                          onClick={() => handleView(product.id)}
+                          onClick={() => handleView(product)}
                           title="View"
                         >
                           <VisibilityIcon />
                         </IconButton>
                         <IconButton
-                          onClick={() => handleEdit(product.id)}
+                          onClick={() => handleEdit(product)}
                           title="Edit"
                         >
                           <EditIcon />
                         </IconButton>
                         <IconButton
-                          onClick={() => handleDelete(product.id)}
+                          onClick={() => handleDelete(product)}
                           title="Delete"
                         >
                           <DeleteIcon />
@@ -307,55 +253,13 @@ export default function DiscountCouponsView() {
           </div>
         </div>
       )}
-      {activeButton === "newProduct" && (<form>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          spacing={2}
-          mb={5}
-        >
-          <TextField
-            label="Coupon"
-            value={newCouponForm.coupon}
-            onChange={(e) => handleNewCouponFormChange("coupon", e.target.value)}
-          />
-          <TextField
-            type="date"
-            value={newCouponForm.startDate}
-            onChange={(e) => handleNewCouponFormChange("startDate", e.target.value)}
-          />
-          <TextField
-            type="date"
-            value={newCouponForm.endDate}
-            onChange={(e) => handleNewCouponFormChange("endDate", e.target.value)}
-          />
-          <TextField
-            label="Discount"
-            value={newCouponForm.discount}
-            onChange={(e) => handleNewCouponFormChange("discount", e.target.value)}
-          />
-          <TextField
-            label="Quantity"
-            type="number"
-            value={newCouponForm.quantity}
-            onChange={(e) => handleNewCouponFormChange("quantity", e.target.value)}
-          />
-          <TextField
-            label="Status"
-            value={newCouponForm.status}
-            onChange={(e) => handleNewCouponFormChange("status", e.target.value)}
-          />
-        </Stack>
-        <Button
-          onClick={"sss"}
-          variant="contained"
-          color="primary"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-        >
-          Add Coupon
-        </Button>
-      </form>)}
+      {activeButton === "newProduct" && (
+        <NewDiscountCoupon createDataForCoupon={createDataForCoupon} setActiveButton={setActiveButton} />
+      )}
+
+      {(activeButton === "edit" || activeButton === "view") && (
+        <EditViewDiscountCoupon sendUpdatedDataToParent={sendUpdatedDataToParent} clickedCoupon={clickedCoupon} activeButton={activeButton} setActiveButton={setActiveButton} />
+      )}
     </Container>
   );
 }
