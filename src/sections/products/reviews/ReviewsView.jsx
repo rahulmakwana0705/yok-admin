@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -10,14 +10,33 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import Iconify from "src/components/iconify";
 import { Box, IconButton, TextField, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import "./ReviewsView.css";
+import { getRating } from "src/api/api";
 
 export default function ReviewsView() {
+
+    const [review, setReview] = useState(null)
+
+    useEffect(() => {
+        loadProducts()
+      }, [])
+    
+      const loadProducts = async() => {
+        try{
+          const response = await getRating()
+          setReview(response?.data)
+          console.log('response products', response);
+        }catch(error){
+          console.log('error', error);
+        }
+      }
+    
 
     const dummyReviews = [
         { id: 1, product: 'Product A', rating: 4.5, customer: 'John Doe', comment: 'Great product!', published: true },
         { id: 2, product: 'Product B', rating: 3.8, customer: 'Jane Doe', comment: 'Could be better.', published: true },
         { id: 3, product: 'Product C', rating: 5.0, customer: 'Alice Smith', comment: 'Excellent!', published: false },
     ];
+
 
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOption, setSortOption] = useState('');
