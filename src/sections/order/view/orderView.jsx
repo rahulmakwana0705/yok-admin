@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 
 import Stack from "@mui/material/Stack";
@@ -31,9 +31,11 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import { getAllOrders } from "src/api/api";
 
 export default function OrderView() {
   const [activeButton, setActiveButton] = useState("product");
+  const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState(null);
 
@@ -44,78 +46,23 @@ export default function OrderView() {
     setActiveButton("newProduct");
     // navigate('/product/add-product')
   };
-  const additionalDummyOrders = [
-    {
-      order: 4,
-      customer: "Alice Johnson",
-      date: "2024-02-17",
-      items: [
-        { id: 1, product: "Product A", price: "$20", quantity: 2 },
-        { id: 3, product: "Product C", price: "$30", quantity: 1 },
-      ],
-      price: "$70",
-      status: "Processing",
-    },
-    {
-      order: 5,
-      customer: "Charlie Brown",
-      date: "2024-02-18",
-      items: [{ id: 2, product: "Product B", price: "$25", quantity: 3 }],
-      price: "$75",
-      status: "Shipped",
-    },
-    {
-      order: 6,
-      customer: "Eva Green",
-      date: "2024-02-19",
-      items: [
-        { id: 1, product: "Product A", price: "$20", quantity: 1 },
-        { id: 3, product: "Product C", price: "$30", quantity: 2 },
-      ],
-      price: "$80",
-      status: "Delivered",
-    },
-    {
-      order: 7,
-      customer: "David Smith",
-      date: "2024-02-20",
-      items: [{ id: 2, product: "Product B", price: "$25", quantity: 5 }],
-      price: "$125",
-      status: "Pending",
-    },
-    {
-      order: 8,
-      customer: "Grace Johnson",
-      date: "2024-02-21",
-      items: [
-        { id: 1, product: "Product A", price: "$20", quantity: 3 },
-        { id: 2, product: "Product B", price: "$25", quantity: 2 },
-        { id: 3, product: "Product C", price: "$30", quantity: 1 },
-      ],
-      price: "$145",
-      status: "Processing",
-    },
-    {
-      order: 9,
-      customer: "Frank Brown",
-      date: "2024-02-22",
-      items: [{ id: 3, product: "Product C", price: "$30", quantity: 4 }],
-      price: "$120",
-      status: "Shipped",
-    },
-    {
-      order: 10,
-      customer: "Helen Green",
-      date: "2024-02-23",
-      items: [
-        { id: 1, product: "Product A", price: "$20", quantity: 2 },
-        { id: 2, product: "Product B", price: "$25", quantity: 1 },
-        { id: 3, product: "Product C", price: "$30", quantity: 3 },
-      ],
-      price: "$135",
-      status: "Delivered",
-    },
-  ];
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      const { data } = await getAllOrders();
+      console.log(data)
+      if (data.success) {
+        setOrders(data.orders);
+      } else {
+        console.error("Failed to fetch orders");
+      }
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
   const handleView = (productId) => {
     console.log(`View product with ID: ${productId}`);
   };
@@ -137,28 +84,21 @@ export default function OrderView() {
     console.log("Sort Option:", event.target.value);
   };
 
-  const filteredProducts = additionalDummyOrders
-    .filter((product) => {
-      const searchTermLower = searchTerm.toLowerCase();
-      return Object.values(product).some(
-        (value) =>
-          typeof value === "string" &&
-          value.toLowerCase().includes(searchTermLower)
-      );
-    })
-    .filter((product) => {
-      if (sortOption === "Processing") {
-        return product.status === "Processing";
-      } else if (sortOption === "Shipped") {
-        return product.status === "Shipped";
-      } else if (sortOption === "Delivered") {
-        return product.status === "Delivered";
-      } else if (sortOption === "Pending") {
-        return product.status === "Pending";
-      }
-      return true;
-    });
-    console.log('sortOption', sortOption);
+  const filteredOrders = orders.filter((order) => {
+    const searchTermLower = searchTerm.toLowerCase();
+    const { shippingAddress, status } = order;
+    const addressValues = Object.values(shippingAddress).join(" ").toLowerCase();
+    return (
+      addressValues.includes(searchTermLower) ||
+      status.toLowerCase().includes(searchTermLower)
+    );
+  }).filter((order) => {
+    if (sortOption) {
+      return order.status.toLowerCase() === sortOption.toLowerCase();
+    }
+    return true;
+  });
+  console.log('sortOption', filteredOrders);
   return (
     <Container>
       <div>
@@ -189,14 +129,14 @@ export default function OrderView() {
               id="fullWidth"
               value={searchTerm}
               onChange={handleSearch}
-              // InputProps={{
-              //   startAdornment: (
-              //     <InputAdornment position="start">
-              //       {/* Add your search icon here */}
-              //       <SearchIcon />
-              //     </InputAdornment>
-              //   ),
-              // }}
+            // InputProps={{
+            //   startAdornment: (
+            //     <InputAdornment position="start">
+            //       {/* Add your search icon here */}
+            //       <SearchIcon />
+            //     </InputAdornment>
+            //   ),
+            // }}
             />
           </Box>
 
@@ -266,14 +206,14 @@ export default function OrderView() {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts && filteredProducts.length > 0 ? (
-                filteredProducts.map((orders) => (
-                  <tr key={orders.order}>
-                    <td>{orders.order}</td>
-                    <td>{orders.customer}</td>
-                    <td>{orders.date}</td>
-                    <td>{orders.items.length}</td>
-                    <td>{orders.price}</td>
+              {filteredOrders && filteredOrders.length > 0 ? (
+                filteredOrders.map((orders) => (
+                  <tr key={orders._id}>
+                    <td>{orders._id}</td>
+                    <td>{orders.user}</td>
+                    <td>{orders.createdAt}</td>
+                    <td>{orders.products.length}</td>
+                    <td>{orders.totalPrice}</td>
                     <td>{orders.status}</td>
                     <td>
                       <IconButton

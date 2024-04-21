@@ -459,3 +459,22 @@ export const deleteCoupons = async (data) => {
         throw error;
     }
 };
+
+// get all orders
+
+export const getAllOrders = async (data) => {
+    try {
+        const url = `${BASE_URL}/order/get`;
+
+        const response = await axios.get(url, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error fetching submenus:', error);
+        throw error;
+    }
+};
