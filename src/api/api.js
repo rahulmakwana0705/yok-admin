@@ -460,6 +460,24 @@ export const deleteCoupons = async (data) => {
     }
 };
 
+export const getRating = async (data) => {
+    try {
+        const url = `${BASE_URL}/rating/get`;
+
+        const response = await axios.get(url, data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response;
+    } catch (error) {
+        console.error('Error fetching submenus:', error);
+        throw error;
+    }
+};
+
+
 // get all orders
 
 export const getAllOrders = async (data) => {

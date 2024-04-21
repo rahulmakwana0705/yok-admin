@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -10,14 +10,29 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import Iconify from "src/components/iconify";
 import { Box, IconButton, TextField, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import "./ReviewsView.css";
+import { getRating } from "src/api/api";
 
 export default function ReviewsView() {
 
-    const dummyReviews = [
-        { id: 1, product: 'Product A', rating: 4.5, customer: 'John Doe', comment: 'Great product!', published: true },
-        { id: 2, product: 'Product B', rating: 3.8, customer: 'Jane Doe', comment: 'Could be better.', published: true },
-        { id: 3, product: 'Product C', rating: 5.0, customer: 'Alice Smith', comment: 'Excellent!', published: false },
-    ];
+    const [review, setReview] = useState(null)
+
+    useEffect(() => {
+        loadProducts()
+      }, [])
+    
+      const loadProducts = async() => {
+        try{
+          const response = await getRating()
+          setReview(response?.data?.ratings)
+          console.log('response products', response);
+        }catch(error){
+          console.log('error', error);
+        }
+      }
+    
+
+    // const dummyReviews = review
+
 
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOption, setSortOption] = useState('');
@@ -42,8 +57,7 @@ export default function ReviewsView() {
         setSortOption(event.target.value);
     };
 
-    const filteredReviews = dummyReviews
-        .filter((review) => {
+    const filteredReviews = review?.filter((review) => {
             const searchTermLower = searchTerm.toLowerCase();
             return Object.values(review).some(
                 (value) => typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
@@ -99,15 +113,13 @@ export default function ReviewsView() {
                         />
                     </Box>
 
-                    {/* Sort By Dropdown */}
-                    <FormControl variant="outlined" sx={{ width: '50%', minWidth: 120 }}>
+                    {/* <FormControl variant="outlined" sx={{ width: '50%', minWidth: 120 }}>
                         <InputLabel>Sort By</InputLabel>
                         <Select
                             value={sortOption}
                             onChange={handleSort}
                             label="Sort By"
                         >
-                            {/* Dummy Options */}
                             <MenuItem value="" disabled>
                                 <em>None</em>
                             </MenuItem>
@@ -115,7 +127,7 @@ export default function ReviewsView() {
                             <MenuItem value="RatingLowToHigh">Rating (Low &gt; High)</MenuItem>
                             <MenuItem value="Published">Published</MenuItem>
                         </Select>
-                    </FormControl>
+                    </FormControl> */}
                 </Stack>
 
                 <div className="table-container">
@@ -127,21 +139,19 @@ export default function ReviewsView() {
                                 <th>Rating</th>
                                 <th>Customer</th>
                                 <th>Comment</th>
-                                <th>Published</th>
-                                <th>Action</th>
+                                {/* <th>Action</th> */}
                             </tr>
                         </thead>
                         <tbody>
                             {filteredReviews && filteredReviews.length > 0 ? (
-                                filteredReviews.map((review) => (
-                                    <tr key={review.id}>
-                                        <td>{review.id}</td>
-                                        <td>{review.product}</td>
+                                filteredReviews.map((review, i) => (
+                                    <tr key={i}>
+                                        <td>{i+1}</td>
+                                        <td>{review.productName}</td>
                                         <td>{review.rating}</td>
-                                        <td>{review.customer}</td>
-                                        <td>{review.comment}</td>
-                                        <td>{review.published ? 'Yes' : 'No'}</td>
-                                        <td>
+                                        <td>{review.userEmail}</td>
+                                        <td>{review.message}</td>
+                                        {/* <td>
                                             <IconButton onClick={() => handleView(review.id)} title="View">
                                                 <VisibilityIcon />
                                             </IconButton>
@@ -151,7 +161,7 @@ export default function ReviewsView() {
                                             <IconButton onClick={() => handleDelete(review.id)} title="Delete">
                                                 <DeleteIcon />
                                             </IconButton>
-                                        </td>
+                                        </td> */}
                                     </tr>
                                 ))
                             ) : (
