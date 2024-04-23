@@ -15,18 +15,11 @@
 }
 
 .product-table th {
-  background-color: #f2f2f2;
+  background-color: #000000 !important;
+  color: #eaeaea;
   font-weight: bold;
 }
 
-/* .product-table tr:hover {
-  background-color: #f5f5f5;
-} */
-
-.red {
-  color: red;
-}
-
-.product-table td button {
-  margin-right: 0.5rem;
+.product-table tr:nth-child(even) {
+  background-color: #eaeaea;
 }

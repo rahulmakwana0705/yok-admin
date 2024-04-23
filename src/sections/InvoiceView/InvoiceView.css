@@ -1,32 +1,54 @@
 .table-container {
-    overflow-x: auto;
-  }
-  
-  .review-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-  }
-  
-  .review-table th,
-  .review-table td {
-    padding: 1rem;
-    text-align: left;
-  }
-  
-  .review-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
-  
-  .review-table tr:hover {
+  overflow-x: auto;
+}
+
+.review-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.review-table th,
+.review-table td {
+  padding: 1rem;
+  text-align: left;
+}
+
+.review-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+/* .review-table tr:hover {
     background-color: #f5f5f5;
-  }
-  
-  .review-table td button {
-    margin-right: 0.5rem;
-  }
-  
+  } */
+
+.review-table th {
+  background-color: #000000;
+  color: #eaeaea;
+  font-weight: bold;
+}
+
+.review-table tr:nth-child(even) {
+  background-color: #eaeaea;
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: #1ac90a;
+}
+
+.aquablue {
+  color: #007373 !important;
+}
+
+.review-table td button {
+  margin-right: 0.5rem;
+}
+
 /* Invoice Container */
 .invoice-container {
   max-width: 600px;
@@ -56,7 +78,8 @@
   margin-bottom: 20px;
 }
 
-.invoice-table th, .invoice-table td {
+.invoice-table th,
+.invoice-table td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: left;

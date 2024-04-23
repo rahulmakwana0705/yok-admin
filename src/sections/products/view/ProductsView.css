@@ -15,31 +15,44 @@
 }
 
 .product-table th {
-  background-color: #f2f2f2;
+  background-color: #000000;
+  color: #eaeaea;
   font-weight: bold;
 }
 
-.product-table tr:hover {
+.product-table tr:nth-child(even) {
+  background-color: #eaeaea;
+}
+
+/* .product-table tr:hover {
   background-color: #f5f5f5;
+} */
+
+.green {
+  color: #1ac90a;
+}
+
+.aquablue {
+  color: #007373 !important;
 }
 
 .product-table td button {
   margin-right: 0.5rem;
 }
 
-.create-product-details-yok{
-  margin-top: 24px; 
+.create-product-details-yok {
+  margin-top: 24px;
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
 
-.create-product-details-and-title-para-yok{
+.create-product-details-and-title-para-yok {
   width: 35%;
   padding: 0px 10px 20px 0px;
 }
 
-.create-product-details-product-name-image-yok{
+.create-product-details-product-name-image-yok {
   width: 65%;
   padding: 20px;
   background-color: rgb(255, 255, 255);
@@ -48,12 +61,14 @@
   background-image: none;
   overflow: hidden;
   position: relative;
-  box-shadow: rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
+  box-shadow:
+    rgba(145, 158, 171, 0.2) 0px 0px 2px 0px,
+    rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
   border-radius: 16px;
   z-index: 0;
 }
 
-.create-product-input-box{
+.create-product-input-box {
   color: currentcolor;
   border: 1px solid #dbd7d7;
   border-radius: 6px;
@@ -63,11 +78,13 @@
   padding: 16px 14px;
 }
 
-.create-product-input-box-two-yok{
+.create-product-input-box-two-yok {
   width: 100%;
 }
 
-
+.red {
+  color: red;
+}
 
 /* --------------file------------- */
 .Neon {
@@ -75,15 +92,13 @@
   font-size: 14px;
   color: #494949;
   position: relative;
-  
-
 }
 .Neon * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.Neon-input-inner{
+.Neon-input-inner {
   margin-top: 15px;
 }
 .Neon-input-dragDrop {
@@ -92,13 +107,19 @@
   width: 100%;
   padding: 25px;
   color: #8d9499;
-  color: #97A1A8;
+  color: #97a1a8;
   background: #fff;
   border: 1px solid #dbd7d7;
   text-align: center;
-  -webkit-transition: box-shadow 0.3s, border-color 0.3s;
-  -moz-transition: box-shadow 0.3s, border-color 0.3s;
-  transition: box-shadow 0.3s, border-color 0.3s;
+  -webkit-transition:
+    box-shadow 0.3s,
+    border-color 0.3s;
+  -moz-transition:
+    box-shadow 0.3s,
+    border-color 0.3s;
+  transition:
+    box-shadow 0.3s,
+    border-color 0.3s;
 }
 .Neon-input-dragDrop .Neon-input-icon {
   font-size: 48px;
@@ -131,10 +152,9 @@
   background-color: #fff;
 }
 
-
 /* -------------------input file css---------------------- */
 
-.create-product-button-yok{
+.create-product-button-yok {
   margin-top: 20px;
   text-align: end;
 }

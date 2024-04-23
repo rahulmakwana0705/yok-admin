@@ -14,7 +14,7 @@ import TermsAndConditions from "src/sections/termsAndConditions/termsAndConditio
 import PrivacyPolicy from "src/sections/PrivacyPolicy/PrivacyPolicy";
 import AboutUs from "src/sections/AboutUs/AboutUs";
 import Submenu from "src/sections/submenu/Submenu";
-import CreateSubmenu from "src/sections/submenu/CreateSubenu";
+import CreateSubmenu from "src/sections/submenu/CreateSubmenu";
 import UpdateSubmenu from "src/sections/submenu/UpdateSubmenu";
 import PaymentSetting from "src/sections/PaymentSetting/PaymentSetting";
 import Cookies from "js-cookie";

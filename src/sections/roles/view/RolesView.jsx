@@ -1,48 +1,59 @@
 /* eslint-disable */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 // import { useNavigate } from "react-router-dom";
 
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-import Iconify from "src/components/iconify";
+import Iconify from 'src/components/iconify';
 
-import "./RolesView.css";
+import './RolesView.css';
 
-import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { deleteUser, getAllUsers } from "src/api/api";
+import {
+  Box,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
+import { deleteUser, getAllUsers } from 'src/api/api';
 
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
-  const [activeButton, setActiveButton] = useState("product");
+  const [activeButton, setActiveButton] = useState('product');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('');
 
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const loadUsers = async() => {
-      try{
-        const response = await getAllUsers()
-        setUser(response?.users.filter((u) => u.role === "admin" || u.role === "superAdmin"))
+    const loadUsers = async () => {
+      try {
+        const response = await getAllUsers();
+        setUser(response?.users.filter((u) => u.role === 'admin' || u.role === 'superAdmin'));
 
         console.log('response', response);
-      }catch(error){
+      } catch (error) {
         console.log('error', error);
       }
-    }
-    loadUsers()
-  }, [])
+    };
+    loadUsers();
+  }, []);
 
-  const dummyData = user
+  const dummyData = user;
 
-  
   const handleView = (productId) => {
     console.log(`View product with ID: ${productId}`);
   };
@@ -51,18 +62,18 @@ export default function UserPage() {
     console.log(`Edit product with ID: ${productId}`);
   };
 
-  const handleDelete = async(id) => {
+  const handleDelete = async (id) => {
     console.log(`Delete product with ID: ${id}`);
-    try{
-      const response = await deleteUser({userId: id})
+    try {
+      const response = await deleteUser({ userId: id });
       console.log('response delete', response);
-      setUser(user.filter((pro) => pro._id !== id))
-    }catch(error){
+      setUser(user.filter((pro) => pro._id !== id));
+    } catch (error) {
       console.log('error on delete ptoduct ', error);
     }
   };
   const handleSearch = (event) => {
-    console.log(event.target.value)
+    console.log(event.target.value);
     setSearchTerm(event.target.value);
   };
 
@@ -97,81 +108,74 @@ export default function UserPage() {
   return (
     <Container>
       <div>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mb={5}
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Typography variant="h4">User</Typography>
+        </Stack>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          spacing={2}
+          mb={5}
+        >
+          <Box
+            sx={{
+              width: '50%',
+            }}
           >
-            <Typography variant="h4">User</Typography>
+            <TextField
+              fullWidth
+              label="Search (Email, name...)"
+              id="fullWidth"
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          </Box>
+        </Stack>
 
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            spacing={2}
-            mb={5}
-          >
-            <Box
-              sx={{
-                width: '50%',
-              }}
-            >
-              <TextField
-                fullWidth
-                label="Search (Email, name...)"
-                id="fullWidth"
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-            </Box>
-          </Stack>
-
-          <div className="table-container">
-            <table className="product-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Email address</th>
-                  {/* <th>Phone</th>
+        <div className="table-container">
+          <table className="product-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email address</th>
+                {/* <th>Phone</th>
                   <th>Number of Orders</th> */}
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredProducts && filteredProducts.length > 0 ? (
-                  filteredProducts.map((product, i) => (
-                    <tr key={product.id}>
-                      <td>{i+1}</td>
-                      <td>{product.name}</td>
-                      <td>{product.email}</td>
-                      {/* <td>{product.phone}</td>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredProducts && filteredProducts.length > 0 ? (
+                filteredProducts.map((product, i) => (
+                  <tr key={product.id}>
+                    <td>{i + 1}</td>
+                    <td>{product.name}</td>
+                    <td>{product.email}</td>
+                    {/* <td>{product.phone}</td>
                       <td>{product.numberOfOrders}</td> */}
-                      <td>
-                        {/* <IconButton onClick={() => handleView(product.id)} title="View">
+                    <td>
+                      {/* <IconButton onClick={() => handleView(product.id)} title="View">
                           <VisibilityIcon />
                         </IconButton>
                         <IconButton onClick={() => handleEdit(product.id)} title="Edit">
                           <EditIcon />
                         </IconButton> */}
-                        <IconButton onClick={() => handleDelete(product._id)} title="Delete">
-                          <DeleteIcon />
-                        </IconButton>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6">No products found</td>
+                      <IconButton onClick={() => handleDelete(product._id)} title="Delete">
+                        <DeleteIcon className="red" />
+                      </IconButton>
+                    </td>
                   </tr>
-                )}
-              </tbody>
-
-            </table>
-          </div>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6">No products found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
+      </div>
     </Container>
   );
 }

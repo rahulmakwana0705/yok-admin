@@ -1,75 +1,88 @@
 /* eslint-disable */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 // import { useNavigate } from "react-router-dom";
 
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-import Iconify from "src/components/iconify";
+import Iconify from 'src/components/iconify';
 
 // import "./ProductsView.css";
-import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import './B2B.css';
+import {
+  Box,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
 // import NewProduct from "../NewProduct";
-import { getProducts, deleteProductAPI, getB2B } from "src/api/api";
+import { getProducts, deleteProductAPI, getB2B } from 'src/api/api';
 // import ViewProduct from "./ViewProduct";
 // import EditProduct from "./EditProduct";
 
 export default function B2B() {
-  const [activeButton, setActiveButton] = useState("product");
+  const [activeButton, setActiveButton] = useState('product');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('');
   const handleNewProductButtonClick = () => {
-    console.log("cli");
-    setActiveButton("newProduct");
+    console.log('cli');
+    setActiveButton('newProduct');
     // navigate('/product/add-product')
   };
-  const [products, setProducts] = useState(null)
-  const [clickedProduct, setClickedProduct] = useState(null)
+  const [products, setProducts] = useState(null);
+  const [clickedProduct, setClickedProduct] = useState(null);
   useEffect(() => {
-    loadProducts()
-  }, [])
+    loadProducts();
+  }, []);
 
-  const loadProducts = async() => {
-    try{
-      const response = await getB2B()
-      setProducts(response?.data)
+  const loadProducts = async () => {
+    try {
+      const response = await getB2B();
+      setProducts(response?.data);
       console.log('response products', response);
-    }catch(error){
+    } catch (error) {
       console.log('error', error);
     }
-  }
+  };
 
   const dummyProducts = products;
 
   const handleView = (product) => {
-    setClickedProduct(product)
-    setActiveButton("viewProduct")
+    setClickedProduct(product);
+    setActiveButton('viewProduct');
   };
 
   const handleEdit = (product) => {
-    setClickedProduct(product)
-    setActiveButton("EditProduct")
+    setClickedProduct(product);
+    setActiveButton('EditProduct');
     console.log(`Edit product with ID: }`);
   };
 
-  const handleDelete = async(product) => {
+  const handleDelete = async (product) => {
     console.log('dlete', product._id);
-    try{
-      const response = await deleteProductAPI({productId: product._id})
+    try {
+      const response = await deleteProductAPI({ productId: product._id });
       console.log('response delete', response);
-      setProducts(products.filter((pro) => pro._id !== product._id))
-    }catch(error){
+      setProducts(products.filter((pro) => pro._id !== product._id));
+    } catch (error) {
       console.log('error on delete ptoduct ', error);
     }
   };
-  
+
   const handleSearch = (event) => {
-    console.log(event.target.value)
+    console.log(event.target.value);
     setSearchTerm(event.target.value);
   };
 
@@ -103,14 +116,9 @@ export default function B2B() {
 
   return (
     <Container>
-      {activeButton === "product" && (
+      {activeButton === 'product' && (
         <div>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mb={5}
-          >
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4">B2B</Typography>
           </Stack>
           <Stack
@@ -132,7 +140,6 @@ export default function B2B() {
                 value={searchTerm}
                 onChange={handleSearch}
               />
-
             </Box>
 
             {/* <FormControl variant="outlined" sx={{ width: '50%', minWidth: 120 }}>
@@ -157,8 +164,6 @@ export default function B2B() {
             </FormControl> */}
           </Stack>
 
-
-
           <div className="table-container">
             <table className="product-table">
               <thead>
@@ -178,7 +183,7 @@ export default function B2B() {
                 {filteredProducts && filteredProducts.length > 0 ? (
                   filteredProducts.map((product, i) => (
                     <tr key={product.id}>
-                      <td>{i+1}</td>
+                      <td>{i + 1}</td>
                       <td>{product.name}</td>
                       <td>{product.email}</td>
                       <td>{product.message}</td>
@@ -187,9 +192,12 @@ export default function B2B() {
                       <td>{product.quantity}</td>
                       <td>
                         {product.selectedCheckboxes.map((checkbox, index) => (
-                            <span key={index}>{checkbox}{index !== product.selectedCheckboxes.length - 1 ? ', ' : ''}</span>
+                          <span key={index}>
+                            {checkbox}
+                            {index !== product.selectedCheckboxes.length - 1 ? ', ' : ''}
+                          </span>
                         ))}
-                        </td>
+                      </td>
                       {/* <td>
                         <IconButton onClick={() => handleView(product)} title="View">
                           <VisibilityIcon />
@@ -209,7 +217,6 @@ export default function B2B() {
                   </tr>
                 )}
               </tbody>
-
             </table>
           </div>
         </div>

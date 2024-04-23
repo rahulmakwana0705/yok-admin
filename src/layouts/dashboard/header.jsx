@@ -67,6 +67,7 @@ export default function Header({ onOpenNav }) {
     >
       <Toolbar
         sx={{
+          backgroundColor: '#F6F1F1',
           height: 1,
           px: { lg: 5 },
         }}

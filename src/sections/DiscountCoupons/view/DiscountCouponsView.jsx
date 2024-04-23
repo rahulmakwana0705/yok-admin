@@ -1,16 +1,16 @@
 /* eslint-disable */
-import React, { useEffect, useState } from "react";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import React, { useEffect, useState } from 'react';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
-import Iconify from "src/components/iconify";
+import Iconify from 'src/components/iconify';
 
-import "./DiscountCoupons.css";
+import './DiscountCoupons.css';
 import {
   Box,
   Checkbox,
@@ -23,27 +23,27 @@ import {
   MenuItem,
   Select,
   TextField,
-} from "@mui/material";
-import NewDiscountCoupon from "./NewDiscountCoupon";
-import { deleteCoupons, getCoupons } from "src/api/api";
-import EditViewDiscountCoupon from "./EditViewDiscountCoupon";
+} from '@mui/material';
+import NewDiscountCoupon from './NewDiscountCoupon';
+import { deleteCoupons, getCoupons } from 'src/api/api';
+import EditViewDiscountCoupon from './EditViewDiscountCoupon';
 // import NewProduct from "../NewProduct";
 
 export default function DiscountCouponsView() {
-  const [activeButton, setActiveButton] = useState("product");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortOption, setSortOption] = useState("");
+  const [activeButton, setActiveButton] = useState('product');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOption, setSortOption] = useState('');
   const [newCouponForm, setNewCouponForm] = useState({
-    coupon: "",
-    startDate: "",
-    endDate: "",
-    discount: "",
-    quantity: "",
-    status: "",
+    coupon: '',
+    startDate: '',
+    endDate: '',
+    discount: '',
+    quantity: '',
+    status: '',
   });
 
-  const [coupons, setCoupons] = useState(null)
-  const [clickedCoupon, setClickedCoupon] = useState(null)
+  const [coupons, setCoupons] = useState(null);
+  const [clickedCoupon, setClickedCoupon] = useState(null);
 
   useEffect(() => {
     loadCoupons();
@@ -52,46 +52,45 @@ export default function DiscountCouponsView() {
   const loadCoupons = async () => {
     try {
       const response = await getCoupons();
-      console.log("response", response);
-      setCoupons(response?.data?.coupons)
+      console.log('response', response);
+      setCoupons(response?.data?.coupons);
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
     }
   };
 
   const handleNewProductButtonClick = () => {
-    setActiveButton("newProduct");
+    setActiveButton('newProduct');
   };
-  const dummyCoupons = coupons
-
+  const dummyCoupons = coupons;
 
   const handleView = (productId) => {
-    setClickedCoupon(productId)
-    setActiveButton('view')
+    setClickedCoupon(productId);
+    setActiveButton('view');
     console.log(`View product with ID: ${productId}`);
   };
 
   const handleEdit = (productId) => {
-    setClickedCoupon(productId)
-    setActiveButton('edit')
+    setClickedCoupon(productId);
+    setActiveButton('edit');
     console.log(`Edit product with ID: ${productId}`);
   };
 
-  const handleDelete = async(product) => {
+  const handleDelete = async (product) => {
     try {
-      const response = await deleteCoupons({_id: product?._id});
-      console.log("response", response);
-      console.log("response", product);
-      if(response?.data?.message === 'Coupon deleted successfully'){
-        const filteredData = coupons.filter((c) => c._id !== product?._id)
+      const response = await deleteCoupons({ _id: product?._id });
+      console.log('response', response);
+      console.log('response', product);
+      if (response?.data?.message === 'Coupon deleted successfully') {
+        const filteredData = coupons.filter((c) => c._id !== product?._id);
         console.log('filteredData', filteredData);
-        setCoupons(filteredData)
+        setCoupons(filteredData);
       }
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
     }
   };
-console.log('coupons', coupons);
+  console.log('coupons', coupons);
 
   const handleSearch = (event) => {
     console.log(event.target.value);
@@ -103,13 +102,13 @@ console.log('coupons', coupons);
   };
   const sortProducts = (a, b) => {
     switch (sortOption) {
-      case "RatingHighToLow":
+      case 'RatingHighToLow':
         return a.id - b.id;
-      case "RatingLowToHigh":
+      case 'RatingLowToHigh':
         return b.id - a.id;
-      case "DiscountLowToHigh":
+      case 'DiscountLowToHigh':
         return parseFloat(b.discount) - parseFloat(a.discount);
-      case "DiscountHighToLow":
+      case 'DiscountHighToLow':
         return parseFloat(a.discount) - parseFloat(b.discount);
       default:
         return 0;
@@ -120,44 +119,40 @@ console.log('coupons', coupons);
     ?.filter((product) => {
       const searchTermLower = searchTerm.toLowerCase();
       return Object.values(product).some(
-        (value) =>
-          typeof value === "string" &&
-          value.toLowerCase().includes(searchTermLower)
+        (value) => typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
       );
     })
     .sort(sortProducts);
 
   const sendUpdatedDataToParent = (data) => {
     coupons.map((c) => {
-      if(c._id === data._id){
-          c.name= data.name,
-          c.type= data.type,
-          c.discount= data.discount,
-          c.minimumQuantity= data.minimumQuantity
+      if (c._id === data._id) {
+        (c.name = data.name),
+          (c.type = data.type),
+          (c.discount = data.discount),
+          (c.minimumQuantity = data.minimumQuantity);
       }
-    })
-  }
+    });
+  };
 
   const createDataForCoupon = (data) => {
     console.log('data to add', data);
-    setCoupons([...coupons, {
-      name: data.name,
-      type: data.type,
-      discount: data.discount,
-      minimumQuantity: data.minimumQuantity
-    }]);
-  }
+    setCoupons([
+      ...coupons,
+      {
+        name: data.name,
+        type: data.type,
+        discount: data.discount,
+        minimumQuantity: data.minimumQuantity,
+      },
+    ]);
+  };
 
   return (
     <Container>
-      {activeButton === "product" && (
+      {activeButton === 'product' && (
         <div>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mb={5}
-          >
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4">Coupons</Typography>
 
             <Button
@@ -173,12 +168,12 @@ console.log('coupons', coupons);
             direction="row"
             alignItems="center"
             justifyContent="space-between"
-            spacing={2} 
+            spacing={2}
             mb={5}
           >
             <Box
               sx={{
-                width: "50%", 
+                width: '50%',
               }}
             >
               <TextField
@@ -216,29 +211,20 @@ console.log('coupons', coupons);
                 {filteredProducts && filteredProducts.length > 0 ? (
                   filteredProducts.map((product, i) => (
                     <tr key={i}>
-                      <td>{i+1}</td>
+                      <td>{i + 1}</td>
                       <td>{product.name}</td>
                       <td>{product.type}</td>
                       <td>{product.discount}</td>
                       <td>{product.minimumQuantity}</td>
                       <td>
-                        <IconButton
-                          onClick={() => handleView(product)}
-                          title="View"
-                        >
-                          <VisibilityIcon />
+                        <IconButton onClick={() => handleView(product)} title="View">
+                          <VisibilityIcon className="aquablue" />
                         </IconButton>
-                        <IconButton
-                          onClick={() => handleEdit(product)}
-                          title="Edit"
-                        >
-                          <EditIcon />
+                        <IconButton onClick={() => handleEdit(product)} title="Edit">
+                          <EditIcon className="green" />
                         </IconButton>
-                        <IconButton
-                          onClick={() => handleDelete(product)}
-                          title="Delete"
-                        >
-                          <DeleteIcon />
+                        <IconButton onClick={() => handleDelete(product)} title="Delete">
+                          <DeleteIcon className="red" />
                         </IconButton>
                       </td>
                     </tr>
@@ -253,12 +239,20 @@ console.log('coupons', coupons);
           </div>
         </div>
       )}
-      {activeButton === "newProduct" && (
-        <NewDiscountCoupon createDataForCoupon={createDataForCoupon} setActiveButton={setActiveButton} />
+      {activeButton === 'newProduct' && (
+        <NewDiscountCoupon
+          createDataForCoupon={createDataForCoupon}
+          setActiveButton={setActiveButton}
+        />
       )}
 
-      {(activeButton === "edit" || activeButton === "view") && (
-        <EditViewDiscountCoupon sendUpdatedDataToParent={sendUpdatedDataToParent} clickedCoupon={clickedCoupon} activeButton={activeButton} setActiveButton={setActiveButton} />
+      {(activeButton === 'edit' || activeButton === 'view') && (
+        <EditViewDiscountCoupon
+          sendUpdatedDataToParent={sendUpdatedDataToParent}
+          clickedCoupon={clickedCoupon}
+          activeButton={activeButton}
+          setActiveButton={setActiveButton}
+        />
       )}
     </Container>
   );
