@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Iconify from 'src/components/iconify';
+import Pagination from '@mui/material/Pagination';
 import {
   Box,
   Checkbox,
@@ -35,15 +36,156 @@ export default function CategoriesView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('');
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Number of items per page
+  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+
   const handleNewCategoryButtonClick = () => {
     console.log('Clicked on New Category');
     setActiveButton('newCategory');
   };
 
   const dummyCategories = [
-    { id: 1, name: 'Category A', parentCategory: 'Parent A', orderLevel: 1, banner: 'Banner A' },
-    { id: 2, name: 'Category B', parentCategory: 'Parent B', orderLevel: 2, banner: 'Banner B' },
-    { id: 3, name: 'Category C', parentCategory: 'Parent C', orderLevel: 3, banner: 'Banner C' },
+    {
+      name: 'Product 1',
+      image: { original: 'https://example.com/image1.jpg' },
+      icon: 'icon1',
+      slug: 'product-1',
+      productCount: 100,
+    },
+    {
+      name: 'Product 2',
+      image: { original: 'https://example.com/image2.jpg' },
+      icon: 'icon2',
+      slug: 'product-2',
+      productCount: 150,
+    },
+    {
+      name: 'Product 3',
+      image: { original: 'https://example.com/image3.jpg' },
+      icon: 'icon3',
+      slug: 'product-3',
+      productCount: 200,
+    },
+    {
+      name: 'Product 4',
+      image: { original: 'https://example.com/image4.jpg' },
+      icon: 'icon4',
+      slug: 'product-4',
+      productCount: 80,
+    },
+    {
+      name: 'Product 5',
+      image: { original: 'https://example.com/image5.jpg' },
+      icon: 'icon5',
+      slug: 'product-5',
+      productCount: 120,
+    },
+    {
+      name: 'Product 6',
+      image: { original: 'https://example.com/image6.jpg' },
+      icon: 'icon6',
+      slug: 'product-6',
+      productCount: 90,
+    },
+    {
+      name: 'Product 7',
+      image: { original: 'https://example.com/image7.jpg' },
+      icon: 'icon7',
+      slug: 'product-7',
+      productCount: 110,
+    },
+    {
+      name: 'Product 8',
+      image: { original: 'https://example.com/image8.jpg' },
+      icon: 'icon8',
+      slug: 'product-8',
+      productCount: 130,
+    },
+    {
+      name: 'Product 9',
+      image: { original: 'https://example.com/image9.jpg' },
+      icon: 'icon9',
+      slug: 'product-9',
+      productCount: 100,
+    },
+    {
+      name: 'Product 10',
+      image: { original: 'https://example.com/image10.jpg' },
+      icon: 'icon10',
+      slug: 'product-10',
+      productCount: 160,
+    },
+    {
+      name: 'Product 11',
+      image: { original: 'https://example.com/image11.jpg' },
+      icon: 'icon11',
+      slug: 'product-11',
+      productCount: 170,
+    },
+    {
+      name: 'Product 12',
+      image: { original: 'https://example.com/image12.jpg' },
+      icon: 'icon12',
+      slug: 'product-12',
+      productCount: 140,
+    },
+    {
+      name: 'Product 13',
+      image: { original: 'https://example.com/image13.jpg' },
+      icon: 'icon13',
+      slug: 'product-13',
+      productCount: 200,
+    },
+    {
+      name: 'Product 14',
+      image: { original: 'https://example.com/image14.jpg' },
+      icon: 'icon14',
+      slug: 'product-14',
+      productCount: 190,
+    },
+    {
+      name: 'Product 15',
+      image: { original: 'https://example.com/image15.jpg' },
+      icon: 'icon15',
+      slug: 'product-15',
+      productCount: 180,
+    },
+    {
+      name: 'Product 16',
+      image: { original: 'https://example.com/image16.jpg' },
+      icon: 'icon16',
+      slug: 'product-16',
+      productCount: 150,
+    },
+    {
+      name: 'Product 17',
+      image: { original: 'https://example.com/image17.jpg' },
+      icon: 'icon17',
+      slug: 'product-17',
+      productCount: 100,
+    },
+    {
+      name: 'Product 18',
+      image: { original: 'https://example.com/image18.jpg' },
+      icon: 'icon18',
+      slug: 'product-18',
+      productCount: 110,
+    },
+    {
+      name: 'Product 19',
+      image: { original: 'https://example.com/image19.jpg' },
+      icon: 'icon19',
+      slug: 'product-19',
+      productCount: 130,
+    },
+    {
+      name: 'Product 20',
+      image: { original: 'https://example.com/image20.jpg' },
+      icon: 'icon20',
+      slug: 'product-20',
+      productCount: 120,
+    },
   ];
 
   const handleView = (categoryId) => {
@@ -127,6 +269,15 @@ export default function CategoriesView() {
   };
   console.log('all catagory, filteredCategories', filteredCategories);
 
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  const displayedCategories = filteredCategories.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <Container>
       {activeButton === 'category' && (
@@ -200,8 +351,8 @@ export default function CategoriesView() {
                 </tr>
               </thead>
               <tbody>
-                {filteredCategories && filteredCategories.length > 0 ? (
-                  filteredCategories.map((category, index) => (
+                {displayedCategories && displayedCategories.length > 0 ? (
+                  displayedCategories.map((category, index) => (
                     <tr key={category._id}>
                       <td>{index + 1}</td>
                       <td>{category.name}</td>
@@ -239,6 +390,17 @@ export default function CategoriesView() {
                 )}
               </tbody>
             </table>
+          </div>
+          <div className="flex justify-center items-center mt-4">
+            <Stack alignItems={'end'}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                variant="outlined"
+                shape="rounded"
+              />
+            </Stack>
           </div>
         </div>
       )}

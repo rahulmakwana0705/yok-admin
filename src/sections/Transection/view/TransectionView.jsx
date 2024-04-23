@@ -8,6 +8,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Iconify from 'src/components/iconify';
+import Pagination from '@mui/material/Pagination';
+
 import {
   Box,
   IconButton,
@@ -20,6 +22,9 @@ import {
 import './TransectionView.css';
 
 export default function RolesView() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   const dummyReviews = [
     {
       id: 1,
@@ -44,6 +49,150 @@ export default function RolesView() {
       customer: 'Alice Smith',
       comment: 'Excellent!',
       published: false,
+    },
+    {
+      id: 4,
+      product: 'Product D',
+      rating: 4.0,
+      customer: 'Bob Johnson',
+      comment: 'Good quality.',
+      published: true,
+    },
+    {
+      id: 5,
+      product: 'Product E',
+      rating: 2.5,
+      customer: 'Emily Wilson',
+      comment: 'Not satisfied.',
+      published: true,
+    },
+    {
+      id: 6,
+      product: 'Product F',
+      rating: 4.8,
+      customer: 'Michael Brown',
+      comment: 'Awesome!',
+      published: true,
+    },
+    {
+      id: 7,
+      product: 'Product G',
+      rating: 3.0,
+      customer: 'Sarah Davis',
+      comment: "It's okay.",
+      published: false,
+    },
+    {
+      id: 8,
+      product: 'Product H',
+      rating: 4.2,
+      customer: 'Robert Smith',
+      comment: 'Pretty good.',
+      published: true,
+    },
+    {
+      id: 9,
+      product: 'Product I',
+      rating: 5.0,
+      customer: 'Emma Johnson',
+      comment: 'Absolutely fantastic!',
+      published: true,
+    },
+    {
+      id: 10,
+      product: 'Product J',
+      rating: 2.0,
+      customer: 'William Brown',
+      comment: 'Not recommended.',
+      published: true,
+    },
+    {
+      id: 11,
+      product: 'Product K',
+      rating: 4.7,
+      customer: 'Olivia Davis',
+      comment: 'Highly recommended.',
+      published: false,
+    },
+    {
+      id: 12,
+      product: 'Product L',
+      rating: 3.5,
+      customer: 'David Smith',
+      comment: 'Average.',
+      published: true,
+    },
+    {
+      id: 13,
+      product: 'Product M',
+      rating: 4.9,
+      customer: 'Sophia Johnson',
+      comment: 'Fantastic!',
+      published: true,
+    },
+    {
+      id: 14,
+      product: 'Product N',
+      rating: 2.8,
+      customer: 'Liam Brown',
+      comment: 'Not worth the price.',
+      published: true,
+    },
+    {
+      id: 15,
+      product: 'Product O',
+      rating: 4.6,
+      customer: 'Isabella Smith',
+      comment: 'Great value for money.',
+      published: false,
+    },
+    {
+      id: 16,
+      product: 'Product P',
+      rating: 3.3,
+      customer: 'Ethan Davis',
+      comment: 'Could improve.',
+      published: true,
+    },
+    {
+      id: 17,
+      product: 'Product Q',
+      rating: 4.4,
+      customer: 'Mia Johnson',
+      comment: 'Very good.',
+      published: true,
+    },
+    {
+      id: 18,
+      product: 'Product R',
+      rating: 5.0,
+      customer: 'Ava Brown',
+      comment: 'Outstanding!',
+      published: true,
+    },
+    {
+      id: 19,
+      product: 'Product S',
+      rating: 3.7,
+      customer: 'Lucas Smith',
+      comment: 'Decent product.',
+      published: true,
+    },
+    {
+      id: 20,
+      product: 'Product T',
+      rating: 4.1,
+      customer: 'Mason Davis',
+      comment: 'Quite satisfied.',
+      published: false,
+    },
+    {
+      id: 21,
+      product: 'Product U',
+      rating: 2.2,
+      customer: 'Ella Johnson',
+      comment: 'Not good.',
+      published: true,
     },
   ];
 
@@ -70,6 +219,9 @@ export default function RolesView() {
     setSortOption(event.target.value);
   };
 
+  const totalPages = Math.ceil(dummyReviews?.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
   const filteredReviews = dummyReviews
     .filter((review) => {
       const searchTermLower = searchTerm.toLowerCase();
@@ -86,7 +238,12 @@ export default function RolesView() {
         return a.published ? -1 : 1;
       }
       return 0;
-    });
+    })
+    .slice(startIndex, endIndex);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   return (
     <Container>
@@ -178,6 +335,19 @@ export default function RolesView() {
           </table>
         </div>
       </div>
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center mt-4">
+          <Stack alignItems={'end'}>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              variant="outlined"
+              shape="rounded"
+            />
+          </Stack>
+        </div>
+      )}
     </Container>
   );
 }

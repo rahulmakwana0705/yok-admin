@@ -13,11 +13,14 @@ import { deleteBanner, getAllBanners } from 'src/api/api';
 import NewBanner from './NewBanner';
 import './Banner.css';
 import Swal from 'sweetalert2';
+import Pagination from '@mui/material/Pagination';
 
 export default function Banner() {
   const [banners, setBanners] = useState([]);
   const [activeButton, setActiveButton] = useState('banner');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const handleNewBannerButtonClick = () => {
     setActiveButton('newBanner');
@@ -73,9 +76,16 @@ export default function Banner() {
     }
   };
 
-  const filteredBanners = banners.filter((banner) =>
-    banner.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const totalPages = Math.ceil(banners?.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const filteredBanners = banners
+    .filter((banner) => banner.title.toLowerCase().includes(searchTerm.toLowerCase()))
+    .slice(startIndex, endIndex);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   return (
     <Container>
@@ -115,41 +125,56 @@ export default function Banner() {
                   <th>Actions</th>
                 </tr>
               </thead>
-              {filteredBanners.length > 0 ? (
-                filteredBanners.map((banner, index) => (
-                  <tr key={banner._id}>
-                    <td>{index + 1}</td>
-                    <td>
-                      <img
-                        src={banner.image.desktop.url}
-                        alt={banner.title}
-                        style={{ maxWidth: '100px' }}
-                      />
-                    </td>
-                    <td>
-                      <img
-                        src={banner.image.mobile.url}
-                        alt={banner.title}
-                        style={{ maxWidth: '100px' }}
-                      />
-                    </td>
-                    <td>{banner.title}</td>
-                    <td>{banner.slug}</td>
-                    <td>{banner.position}</td>
-                    <td>
-                      <IconButton onClick={() => handleDelete(banner._id)} title="Delete">
-                        <DeleteIcon className="red" />
-                      </IconButton>
-                    </td>
+              <tbody>
+                {filteredBanners.length > 0 ? (
+                  filteredBanners.map((banner, index) => (
+                    <tr key={banner._id}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <img
+                          src={banner.image.desktop.url}
+                          alt={banner.title}
+                          style={{ maxWidth: '100px' }}
+                        />
+                      </td>
+                      <td>
+                        <img
+                          src={banner.image.mobile.url}
+                          alt={banner.title}
+                          style={{ maxWidth: '100px' }}
+                        />
+                      </td>
+                      <td>{banner.title}</td>
+                      <td>{banner.slug}</td>
+                      <td>{banner.position}</td>
+                      <td>
+                        <IconButton onClick={() => handleDelete(banner._id)} title="Delete">
+                          <DeleteIcon className="red" />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5">No banners found</td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5">No banners found</td>
-                </tr>
-              )}
+                )}
+              </tbody>
             </table>
           </div>
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center mt-4">
+              <Stack alignItems={'end'}>
+                <Pagination
+                  count={totalPages}
+                  page={currentPage}
+                  onChange={handlePageChange}
+                  variant="outlined"
+                  shape="rounded"
+                />
+              </Stack>
+            </div>
+          )}
         </div>
       )}
       {activeButton === 'newBanner' && <NewBanner />}

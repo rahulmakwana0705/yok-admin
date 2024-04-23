@@ -336,17 +336,19 @@ export default function UserPage() {
               )}
             </tbody>
           </table>
-          <div className="flex justify-center items-center mt-4">
-            <Stack alignItems={'center'}>
-              <Pagination
-                count={totalPages}
-                page={currentPage}
-                onChange={handlePageChange}
-                variant="outlined"
-                shape="rounded"
-              />
-            </Stack>
-          </div>
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center mt-4">
+              <Stack alignItems={'end'}>
+                <Pagination
+                  count={totalPages}
+                  page={currentPage}
+                  onChange={handlePageChange}
+                  variant="outlined"
+                  shape="rounded"
+                />
+              </Stack>
+            </div>
+          )}
         </div>
       </div>
     </Container>

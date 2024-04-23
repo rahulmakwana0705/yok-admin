@@ -11,11 +11,14 @@ import './submenu.css';
 import { useRouter } from 'src/routes/hooks';
 import { deleteSubCategory, getSubmenus } from 'src/api/api';
 import Swal from 'sweetalert2';
+import Pagination from '@mui/material/Pagination';
 
 export default function Banner() {
   const [activeButton, setActiveButton] = useState('banner');
   const [searchTerm, setSearchTerm] = useState('');
   const [menuData, setMenuData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const router = useRouter();
 
@@ -79,6 +82,34 @@ export default function Banner() {
     console.log('Edit item with ID:', itemId);
   };
 
+  // const dummyData = [
+  //   { id: 1, label: 'Category A' },
+  //   { id: 2, label: 'Category B' },
+  //   { id: 3, label: 'Category C' },
+  //   { id: 4, label: 'Category D' },
+  //   { id: 5, label: 'Category E' },
+  //   { id: 6, label: 'Category F' },
+  //   { id: 7, label: 'Category G' },
+  //   { id: 8, label: 'Category H' },
+  //   { id: 9, label: 'Category I' },
+  //   { id: 10, label: 'Category J' },
+  //   { id: 11, label: 'Category J' },
+  // ];
+
+  // useEffect(() => {
+  //   setMenuData(dummyData);
+  // });
+
+  const totalPages = Math.ceil(menuData?.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const filteredMenu = menuData.slice(startIndex, endIndex);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -96,7 +127,7 @@ export default function Banner() {
             </tr>
           </thead>
           <tbody>
-            {menuData.map((menu) => (
+            {filteredMenu.map((menu) => (
               <React.Fragment key={menu.id}>
                 <tr key={menu.id}>
                   <td>{menu.label}</td>
@@ -114,6 +145,19 @@ export default function Banner() {
           </tbody>
         </table>
       </div>
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center mt-4">
+          <Stack alignItems={'end'}>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              variant="outlined"
+              shape="rounded"
+            />
+          </Stack>
+        </div>
+      )}
     </Container>
   );
 }

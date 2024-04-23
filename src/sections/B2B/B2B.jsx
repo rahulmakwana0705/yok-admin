@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Pagination from '@mui/material/Pagination';
 
 import Iconify from 'src/components/iconify';
 
@@ -36,6 +37,9 @@ export default function B2B() {
   const [activeButton, setActiveButton] = useState('product');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   const handleNewProductButtonClick = () => {
     console.log('cli');
     setActiveButton('newProduct');
@@ -90,6 +94,9 @@ export default function B2B() {
     setSortOption(event.target.value);
   };
 
+  const totalPages = Math.ceil(dummyProducts?.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
   const filteredProducts = dummyProducts
     ?.filter((product) => {
       const searchTermLower = searchTerm.toLowerCase();
@@ -112,7 +119,12 @@ export default function B2B() {
         return a.price < b.price ? -1 : 1;
       }
       return 0;
-    });
+    })
+    .slice(startIndex, endIndex);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   return (
     <Container>
@@ -181,7 +193,7 @@ export default function B2B() {
               </thead>
               <tbody>
                 {filteredProducts && filteredProducts.length > 0 ? (
-                  filteredProducts.map((product, i) => (
+                  filteredProducts?.map((product, i) => (
                     <tr key={product.id}>
                       <td>{i + 1}</td>
                       <td>{product.name}</td>
@@ -218,6 +230,19 @@ export default function B2B() {
                 )}
               </tbody>
             </table>
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center mt-4">
+                <Stack alignItems={'end'}>
+                  <Pagination
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    variant="outlined"
+                    shape="rounded"
+                  />
+                </Stack>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Pagination from '@mui/material/Pagination';
 
 import Iconify from 'src/components/iconify';
 
@@ -35,6 +36,8 @@ export default function UserPage() {
   const [activeButton, setActiveButton] = useState('product');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const [user, setUser] = useState(null);
 
@@ -51,6 +54,93 @@ export default function UserPage() {
     };
     loadUsers();
   }, []);
+
+  /* const dummyData = [
+    {
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+    },
+    {
+      name: 'Jane Smith',
+      email: 'jane.smith@example.com',
+    },
+    {
+      name: 'Bob Johnson',
+      email: 'bob.johnson@example.com',
+    },
+    {
+      name: 'Alice Brown',
+      email: 'alice.brown@example.com',
+    },
+    {
+      name: 'Michael Wilson',
+      email: 'michael.wilson@example.com',
+    },
+    {
+      name: 'Emma Davis',
+      email: 'emma.davis@example.com',
+    },
+    {
+      name: 'Liam Smith',
+      email: 'liam.smith@example.com',
+    },
+    {
+      name: 'Olivia Johnson',
+      email: 'olivia.johnson@example.com',
+    },
+    {
+      name: 'Ethan Brown',
+      email: 'ethan.brown@example.com',
+    },
+    {
+      name: 'Ava Wilson',
+      email: 'ava.wilson@example.com',
+    },
+    {
+      name: 'Lucas Davis',
+      email: 'lucas.davis@example.com',
+    },
+    {
+      name: 'Mia Smith',
+      email: 'mia.smith@example.com',
+    },
+    {
+      name: 'Noah Johnson',
+      email: 'noah.johnson@example.com',
+    },
+    {
+      name: 'Sophia Brown',
+      email: 'sophia.brown@example.com',
+    },
+    {
+      name: 'William Smith',
+      email: 'william.smith@example.com',
+    },
+    {
+      name: 'Ella Johnson',
+      email: 'ella.johnson@example.com',
+    },
+    {
+      name: 'Liam Brown',
+      email: 'liam.brown@example.com',
+    },
+    {
+      name: 'Ava Smith',
+      email: 'ava.smith@example.com',
+    },
+    {
+      name: 'Lucas Johnson',
+      email: 'lucas.johnson@example.com',
+    },
+    {
+      name: 'Mia Brown',
+      email: 'mia.brown@example.com',
+    },
+    {
+      name: 'Noah Smith',
+      email: 'noah.smith@example.com',
+    },
+  ]; */
 
   const dummyData = user;
 
@@ -81,6 +171,9 @@ export default function UserPage() {
     setSortOption(event.target.value);
   };
 
+  const totalPages = Math.ceil(dummyData?.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
   const filteredProducts = dummyData
     ?.filter((product) => {
       const searchTermLower = searchTerm.toLowerCase();
@@ -103,7 +196,12 @@ export default function UserPage() {
         return a.price < b.price ? -1 : 1;
       }
       return 0;
-    });
+    })
+    .slice(startIndex, endIndex);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   return (
     <Container>
@@ -175,6 +273,19 @@ export default function UserPage() {
             </tbody>
           </table>
         </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center mt-4">
+            <Stack alignItems={'end'}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                variant="outlined"
+                shape="rounded"
+              />
+            </Stack>
+          </div>
+        )}
       </div>
     </Container>
   );

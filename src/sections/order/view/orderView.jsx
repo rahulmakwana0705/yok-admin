@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Pagination from '@mui/material/Pagination';
 
 import Iconify from 'src/components/iconify';
 
@@ -36,6 +37,8 @@ export default function OrderView() {
   const [activeButton, setActiveButton] = useState('product');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const [value, setValue] = React.useState(null);
 
@@ -137,6 +140,9 @@ export default function OrderView() {
     console.log('Sort Option:', event.target.value);
   };
 
+  const totalPages = Math.ceil(additionalDummyOrders?.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
   const filteredProducts = additionalDummyOrders
     .filter((product) => {
       const searchTermLower = searchTerm.toLowerCase();
@@ -155,7 +161,13 @@ export default function OrderView() {
         return product.status === 'Pending';
       }
       return true;
-    });
+    })
+    .slice(startIndex, endIndex);
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
   console.log('sortOption', sortOption);
   return (
     <Container>
@@ -282,6 +294,19 @@ export default function OrderView() {
             </tbody>
           </table>
         </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center mt-4">
+            <Stack alignItems={'end'}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                variant="outlined"
+                shape="rounded"
+              />
+            </Stack>
+          </div>
+        )}
       </div>
     </Container>
   );
