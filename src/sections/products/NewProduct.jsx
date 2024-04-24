@@ -1,16 +1,26 @@
 /* eslint-disable */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
-import { Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
+import {
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  Select,
+  TextField,
+} from '@mui/material';
 
-import { createProductAPI } from "src/api/api";
+import { createProductAPI } from 'src/api/api';
 
-import OutlinedInput from "@mui/material/OutlinedInput";
-import ListItemText from "@mui/material/ListItemText";
-import { useNavigate } from "react-router-dom";
+import OutlinedInput from '@mui/material/OutlinedInput';
+import ListItemText from '@mui/material/ListItemText';
+import { useNavigate } from 'react-router-dom';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -23,215 +33,310 @@ const MenuProps = {
   },
 };
 
-const tagsValue = ["Casual", "Cotton"];
+const tagsValue = ['Casual', 'Cotton'];
 
-const variationsValue = ["Small", "Medium", 'Large', "Extra Large"];
+const variationsValue = ['Small', 'Medium', 'Large', 'Extra Large'];
 
-const colorsValue = ["Red", "Green", "Orange"];
+const colorsValue = ['Red', 'Green', 'Orange'];
 
 const NewProduct = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [tags, setTags] = React.useState([]);
   const [color, setColor] = React.useState([]);
   const [variations, setVariations] = React.useState([]);
 
   const [productData, setProductData] = useState({
-    name: "",
-    slug: "",
-    sku: "N/A",
-    description: "",
-    price: "",
-    sale_price: "",
-    quantity: "",
-    category: { id: 1, name: "kids", slug: "kids" },
+    name: '',
+    slug: '',
+    sku: 'N/A',
+    description: '',
+    price: '',
+    sale_price: '',
+    quantity: '',
+    category: { id: 1, name: 'kids', slug: 'kids' },
     tags: [],
     image: null,
     gallery: [],
     variations: [],
     meta: [],
     gender: [],
-    type: "Normal",
+    type: 'Normal',
   });
 
+  const [errors, setErrors] = useState({
+    name: '',
+    slug: '',
+    sku: 'N/A',
+    description: '',
+    price: '',
+    sale_price: '',
+    quantity: '',
+    category: { id: 1, name: 'kids', slug: 'kids' },
+    tags: [],
+    image: null,
+    gallery: [],
+    variations: [],
+    meta: [],
+    gender: [],
+    type: 'Normal',
+  });
 
   console.log('tags', tags);
   console.log('color', color);
   console.log('variations', variations);
 
   const handleTagChange = (name, event) => {
-    const { target: { value } } = event;
+    const {
+      target: { value },
+    } = event;
 
+    const updatedErrors = { ...errors };
     let newVariations = [];
     let existingVariations = [];
 
     if (name === 'tags') {
-      setTags(typeof value === "string" ? value.split(",") : value);
+      setTags(typeof value === 'string' ? value.split(',') : value);
+      updatedErrors[name] = '';
     }
     if (name === 'colors') {
-      setColor(typeof value === "string" ? value.split(",") : value);
+      setColor(typeof value === 'string' ? value.split(',') : value);
+      updatedErrors[name] = '';
 
-      newVariations = value.map(color => ({
+      newVariations = value.map((color) => ({
         id: variationsValue.length + 1,
         value: color,
         attribute: {
           id: 1,
-          name: "Color",
-          slug: "color"
-        }
+          name: 'Color',
+          slug: 'color',
+        },
       }));
       // Filter out existing variations that are not colors
-      existingVariations = productData.variations.filter(variation => variation.attribute.slug !== "color");
+      existingVariations = productData.variations.filter(
+        (variation) => variation.attribute.slug !== 'color'
+      );
     }
     if (name === 'variations') {
-      setVariations(typeof value === "string" ? value.split(",") : value);
+      setVariations(typeof value === 'string' ? value.split(',') : value);
       let shortForms = {
-        'Small': 'S',
-        'Medium': 'M',
-        'Large': 'L',
-        'Extra Large': 'XL'
+        Small: 'S',
+        Medium: 'M',
+        Large: 'L',
+        'Extra Large': 'XL',
       };
-      newVariations = value.map(size => ({
+      newVariations = value.map((size) => ({
         id: variationsValue.length + 1,
         value: shortForms[size],
         attribute: {
           id: 1,
-          name: "Size",
-          slug: "size"
-        }
+          name: 'Size',
+          slug: 'size',
+        },
       }));
+      updatedErrors[name] = '';
       // Filter out existing variations that are not sizes
-      existingVariations = productData.variations.filter(variation => variation.attribute.slug !== "size");
+      existingVariations = productData.variations.filter(
+        (variation) => variation.attribute.slug !== 'size'
+      );
     }
 
     // Combine existing variations with new variations
     const updatedVariations = [...existingVariations, ...newVariations];
 
     // Update productData with unique variations
-    setProductData(prevData => ({
+    setProductData((prevData) => ({
       ...prevData,
-      variations: updatedVariations
+      variations: updatedVariations,
     }));
+    setErrors(updatedErrors);
   };
-
-
-
-
 
   const handleChange = (event) => {
     const { name, value, checked } = event.target;
     setProductData((prevData) => ({
       ...prevData,
-      [name]: name === "customizable" ? checked : value,
+      [name]: name === 'customizable' ? checked : value,
     }));
+    const updatedErrors = { ...errors };
+    updatedErrors[name] = '';
+    setErrors(updatedErrors);
   };
 
   const handleRadioChange = (event) => {
     const { name, value } = event.target;
-    console.log(name, value)
+    console.log(name, value);
     setProductData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+    const updatedErrors = { ...errors };
+    updatedErrors[name] = '';
+    setErrors(updatedErrors);
   };
-
 
   const handleInputChange = (event) => {
     const { name, value, files } = event.target;
-    let updatedMetaData = [...productData.meta]
-    if (files) {
+    let updatedMetaData = [...productData.meta];
+    const updatedErrors = { ...errors };
+    updatedErrors[name] = '';
 
-      if (name === "image") {
+    if (files) {
+      if (name === 'image') {
         setProductData((prevState) => ({
           ...prevState,
           image: files[0],
         }));
-      } else if (name === "gallery") {
+        updatedErrors[name] = '';
+      } else if (name === 'gallery') {
         const selectedFiles = Array.from(files).slice(0, 10);
         setProductData((prevState) => ({
           ...prevState,
           gallery: selectedFiles,
         }));
+        updatedErrors[name] = '';
       }
-    } else if (name === 'productDetails' || name === 'additionalInformation' || name === 'customerReviews') {
+    } else if (
+      name === 'productDetails' ||
+      name === 'additionalInformation' ||
+      name === 'customerReviews'
+    ) {
       // Find the index of the corresponding metaData object based on its title
-      const index = updatedMetaData.findIndex(meta => meta.title === name);
-  
+      const index = updatedMetaData.findIndex((meta) => meta.title === name);
+
       // Update the metaData object if found, or create a new one otherwise
       if (index !== -1) {
         updatedMetaData[index] = {
           ...updatedMetaData[index],
-          content: value
+          content: value,
         };
       } else {
         updatedMetaData.push({
           id: productData.meta.length + 1, // Increment the ID
           title: name,
-          content: value
+          content: value,
         });
       }
-  
+
       // Update the meta state
       setProductData((prevState) => ({
         ...prevState,
         meta: updatedMetaData,
       }));
-    }  else {
+    } else {
       setProductData((prevState) => ({
         ...prevState,
         [name]: value,
       }));
+      updatedErrors[name] = '';
     }
+    setErrors(updatedErrors);
   };
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
+    const updatedErrors = { ...errors };
     if (checked) {
       setProductData({
         ...productData,
         gender: [...productData.gender, name],
       });
+      updatedErrors[name] = '';
     } else {
       setProductData({
         ...productData,
         gender: productData.gender.filter((gender) => gender !== name),
       });
+      updatedErrors[name] = '';
     }
+    setErrors(updatedErrors);
   };
 
   const handleCreateProduct = async () => {
     try {
+      const updatedErrors = {};
+
+      if (!productData.name) {
+        updatedErrors.name = 'Name is required';
+      }
+      if (!productData.slug) {
+        updatedErrors.slug = 'Slug is required';
+      }
+      if (!productData.image) {
+        updatedErrors.image = 'Image is required';
+      }
+      if (!productData.sku) {
+        updatedErrors.sku = 'Sku is required';
+      }
+      if (!productData.description) {
+        updatedErrors.description = 'Description is required';
+      }
+      if (!productData.price) {
+        updatedErrors.price = 'Price is required';
+      }
+      if (!productData.sale_price) {
+        updatedErrors.sale_price = 'Sale price is required';
+      }
+      if (!productData.quantity) {
+        updatedErrors.quantity = 'Quantity is required';
+      }
+      if (!productData.gender) {
+        updatedErrors.gender = 'Gender is required';
+      }
+      if (!productData.variations) {
+        updatedErrors.variations = 'Variations is required';
+      }
+      if (!productData.meta) {
+        updatedErrors.meta = 'Meta is required';
+      }
+      if (!productData.category) {
+        updatedErrors.category = 'Category is required';
+      }
+      if (!productData.tags) {
+        updatedErrors.tags = 'Tag is required';
+      }
+      if (!productData.types) {
+        updatedErrors.types = 'Types is required';
+      }
+
+      if (Object.keys(updatedErrors).length > 0) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          ...updatedErrors,
+        }));
+        return;
+      }
+
       const formData = new FormData();
-      formData.append("image", productData.image);
-      formData.append("name", productData.name);
-      formData.append("slug", productData.slug);
-      formData.append("sku", productData.sku);
-      formData.append("description", productData.description);
-      formData.append("price", productData.price);
-      formData.append("sale_price", productData.sale_price);
-      formData.append("quantity", productData.quantity);
-      formData.append("category", JSON.stringify(productData.category));
-      formData.append("tags", JSON.stringify(productData.tags));
-      formData.append("gender", JSON.stringify(productData.gender));
-      formData.append("variations", JSON.stringify(productData.variations));
-      formData.append("meta", JSON.stringify(productData.meta));
-      formData.append("type", productData.type);
+      formData.append('image', productData.image);
+      formData.append('name', productData.name);
+      formData.append('slug', productData.slug);
+      formData.append('sku', productData.sku);
+      formData.append('description', productData.description);
+      formData.append('price', productData.price);
+      formData.append('sale_price', productData.sale_price);
+      formData.append('quantity', productData.quantity);
+      formData.append('category', JSON.stringify(productData.category));
+      formData.append('tags', JSON.stringify(productData.tags));
+      formData.append('gender', JSON.stringify(productData.gender));
+      formData.append('variations', JSON.stringify(productData.variations));
+      formData.append('meta', JSON.stringify(productData.meta));
+      formData.append('type', productData.type);
 
       productData.gallery.forEach((image, index) => {
         formData.append(`gallery`, image);
       });
 
       const response = await createProductAPI(formData);
-      console.log("Product created successfully:", response);
-      if(response){
-        navigate('/products')
+      console.log('Product created successfully:', response);
+      if (response) {
+        navigate('/products');
       }
     } catch (error) {
-      console.error("Error creating product:", error);
+      console.error('Error creating product:', error);
     }
   };
 
-
-  console.log("productData", productData);
+  console.log('productData', productData);
   return (
     <div>
       <Typography variant="h4">Create a new product</Typography>
@@ -251,6 +356,7 @@ const NewProduct = () => {
               value={productData.name}
               onChange={handleChange}
             />
+            {errors.name && <div style={{ color: 'red', fontSize: '15px' }}>{errors.name}</div>}
           </div>
 
           <div className="mt-4">
@@ -263,7 +369,7 @@ const NewProduct = () => {
                 value={tags}
                 onChange={(event) => handleTagChange('tags', event)}
                 input={<OutlinedInput label="Tag" />}
-                renderValue={(selected) => selected.join(", ")}
+                renderValue={(selected) => selected.join(', ')}
                 MenuProps={MenuProps}
               >
                 {tagsValue.map((name) => (
@@ -274,16 +380,20 @@ const NewProduct = () => {
                 ))}
               </Select>
             </FormControl>
+            {errors.tags && <div style={{ color: 'red', fontSize: '15px' }}>{errors.tags}</div>}
           </div>
           <div className="mt-4">
             <textarea
-              style={{ height: "80px" }}
+              style={{ height: '80px' }}
               className="create-product-input-box"
               placeholder="Description"
               label="Description"
               name="description"
               onChange={handleChange}
             ></textarea>
+            {errors.description && (
+              <div style={{ color: 'red', fontSize: '15px' }}>{errors.description}</div>
+            )}
           </div>
 
           <div className="mt-3">
@@ -291,11 +401,11 @@ const NewProduct = () => {
               <input
                 style={{
                   opacity: 0,
-                  width: "100%",
-                  height: "99px",
-                  position: "absolute",
-                  right: "0px",
-                  left: "0px",
+                  width: '100%',
+                  height: '99px',
+                  position: 'absolute',
+                  right: '0px',
+                  left: '0px',
                 }}
                 accept="image/*"
                 id="image-upload"
@@ -310,11 +420,9 @@ const NewProduct = () => {
                     <i className="fa fa-file-image-o"></i>
                   </div>
                   <div className="Neon-input-text">
-                    <h3>Upload an image</h3>{" "}
+                    <h3>Upload an image</h3>{' '}
                   </div>
-                  <a className="Neon-input-choose-btn blue">
-                    Click to upload image
-                  </a>
+                  <a className="Neon-input-choose-btn blue">Click to upload image</a>
                 </div>
                 {productData.image && (
                   <div>
@@ -322,9 +430,12 @@ const NewProduct = () => {
                     <img
                       src={URL.createObjectURL(productData.image)}
                       alt="Selected"
-                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                      style={{ maxWidth: '100px', maxHeight: '100px' }}
                     />
                   </div>
+                )}
+                {errors.image && (
+                  <div style={{ color: 'red', fontSize: '15px' }}>{errors.image}</div>
                 )}
               </div>
             </div>
@@ -335,11 +446,11 @@ const NewProduct = () => {
               <input
                 style={{
                   opacity: 0,
-                  width: "100%",
-                  height: "99px",
-                  position: "absolute",
-                  right: "0px",
-                  left: "0px",
+                  width: '100%',
+                  height: '99px',
+                  position: 'absolute',
+                  right: '0px',
+                  left: '0px',
                 }}
                 accept="image/*"
                 id="gallery-upload"
@@ -354,31 +465,30 @@ const NewProduct = () => {
                     <i className="fa fa-file-image-o"></i>
                   </div>
                   <div className="Neon-input-text">
-                    <h3>Gallery</h3>{" "}
+                    <h3>Gallery</h3>{' '}
                   </div>
-                  <a className="Neon-input-choose-btn blue">
-                    Click to upload image
-                  </a>
+                  <a className="Neon-input-choose-btn blue">Click to upload image</a>
                 </div>
               </div>
             </div>
             {productData.gallery.length > 0 && (
               <div>
-                <Typography variant="subtitle1">
-                  Selected Gallery Images:
-                </Typography>
+                <Typography variant="subtitle1">Selected Gallery Images:</Typography>
                 {productData.gallery.map((image, index) => (
                   <img
                     key={index}
                     src={URL.createObjectURL(image)}
                     alt={`Selected ${index + 1}`}
                     style={{
-                      maxWidth: "100px",
-                      maxHeight: "100px",
-                      marginRight: "5px",
+                      maxWidth: '100px',
+                      maxHeight: '100px',
+                      marginRight: '5px',
                     }}
                   />
                 ))}
+                {errors.gallery && (
+                  <div style={{ color: 'red', fontSize: '15px' }}>{errors.gallery}</div>
+                )}
               </div>
             )}
           </div>
@@ -401,6 +511,7 @@ const NewProduct = () => {
               value={productData.price}
               onChange={handleChange}
             />
+            {errors.price && <div style={{ color: 'red', fontSize: '15px' }}>{errors.price}</div>}
           </div>
 
           <div className="mt-4">
@@ -413,6 +524,9 @@ const NewProduct = () => {
               value={productData.sale_price}
               onChange={handleChange}
             />
+            {errors.sale_price && (
+              <div style={{ color: 'red', fontSize: '15px' }}>{errors.sale_price}</div>
+            )}
           </div>
 
           <div className="mt-4">
@@ -424,6 +538,9 @@ const NewProduct = () => {
               name="quantity"
               onChange={handleChange}
             />
+            {errors.quantity && (
+              <div style={{ color: 'red', fontSize: '15px' }}>{errors.quantity}</div>
+            )}
           </div>
         </div>
       </div>
@@ -444,7 +561,7 @@ const NewProduct = () => {
                 value={color}
                 onChange={(event) => handleTagChange('colors', event)}
                 input={<OutlinedInput label="Colors" />}
-                renderValue={(selected) => selected.join(", ")}
+                renderValue={(selected) => selected.join(', ')}
                 MenuProps={MenuProps}
               >
                 {colorsValue.map((name) => (
@@ -455,13 +572,12 @@ const NewProduct = () => {
                 ))}
               </Select>
             </FormControl>
+            {errors?.color && <div style={{ color: 'red', fontSize: '15px' }}>{errors?.color}</div>}
           </div>
 
           <div className="mt-4">
             <FormControl fullWidth>
-              <InputLabel id="demo-multiple-checkbox-label">
-                Variations
-              </InputLabel>
+              <InputLabel id="demo-multiple-checkbox-label">Variations</InputLabel>
               <Select
                 labelId="demo-multiple-checkbox-label"
                 id="demo-multiple-checkbox"
@@ -469,7 +585,7 @@ const NewProduct = () => {
                 value={variations}
                 onChange={(event) => handleTagChange('variations', event)}
                 input={<OutlinedInput label="Variations" />}
-                renderValue={(selected) => selected.join(", ")}
+                renderValue={(selected) => selected.join(', ')}
                 MenuProps={MenuProps}
               >
                 {variationsValue.map((name) => (
@@ -489,24 +605,25 @@ const NewProduct = () => {
                 control={<Checkbox />}
                 label="Male"
                 name="Male"
-                checked={productData.gender.includes("Male")}
+                checked={productData.gender.includes('Male')}
                 onChange={handleCheckboxChange}
               />
               <FormControlLabel
                 control={<Checkbox />}
                 label="Women"
                 name="Women"
-                checked={productData.gender.includes("Women")}
+                checked={productData.gender.includes('Women')}
                 onChange={handleCheckboxChange}
               />
               <FormControlLabel
                 control={<Checkbox />}
                 label="Kids"
                 name="Kids"
-                checked={productData.gender.includes("Kids")}
+                checked={productData.gender.includes('Kids')}
                 onChange={handleCheckboxChange}
               />
             </div>
+            {errors.gender && <div style={{ color: 'red', fontSize: '15px' }}>{errors.gender}</div>}
           </div>
           {/* <div className="mt-4">
             <FormControlLabel
@@ -531,28 +648,16 @@ const NewProduct = () => {
                 value={productData.type}
                 onChange={handleRadioChange}
               >
-                <FormControlLabel
-                  value="Normal"
-                  control={<Radio />}
-                  label="Normal"
-                />
-                <FormControlLabel
-                  value="Custom"
-                  control={<Radio />}
-                  label="Custom"
-                />
-                <FormControlLabel
-                  value="Combo"
-                  control={<Radio />}
-                  label="Combo"
-                />
+                <FormControlLabel value="Normal" control={<Radio />} label="Normal" />
+                <FormControlLabel value="Custom" control={<Radio />} label="Custom" />
+                <FormControlLabel value="Combo" control={<Radio />} label="Combo" />
               </RadioGroup>
             </FormControl>
           </div>
 
           <div className="mt-4">
             <textarea
-              style={{ height: "80px" }}
+              style={{ height: '80px' }}
               className="create-product-input-box"
               placeholder="Product Details"
               label="Product Details"
@@ -563,7 +668,7 @@ const NewProduct = () => {
 
           <div className="mt-4">
             <textarea
-              style={{ height: "80px" }}
+              style={{ height: '80px' }}
               className="create-product-input-box"
               placeholder="Additional Information"
               label="Additional Information"
@@ -574,7 +679,7 @@ const NewProduct = () => {
 
           <div className="mt-4">
             <textarea
-              style={{ height: "80px" }}
+              style={{ height: '80px' }}
               className="create-product-input-box"
               placeholder="Customer Reviews"
               label="Customer Reviews"
@@ -586,11 +691,7 @@ const NewProduct = () => {
       </div>
 
       <div className="create-product-button-yok">
-        <Button
-          onClick={handleCreateProduct}
-          variant="contained"
-          color="inherit"
-        >
+        <Button onClick={handleCreateProduct} variant="contained" color="inherit">
           Create Product
         </Button>
       </div>

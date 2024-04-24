@@ -1,18 +1,27 @@
 /* eslint-disable */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
-import { Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
+import {
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  Select,
+  TextField,
+} from '@mui/material';
 
-import { createCategoryAPI } from "src/api/api";
-import Swal from "sweetalert2";
+import { createCategoryAPI } from 'src/api/api';
+import Swal from 'sweetalert2';
 
-
-import OutlinedInput from "@mui/material/OutlinedInput";
-import ListItemText from "@mui/material/ListItemText";
-import "./CategoriesView.css"
+import OutlinedInput from '@mui/material/OutlinedInput';
+import ListItemText from '@mui/material/ListItemText';
+import './CategoriesView.css';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -25,43 +34,50 @@ const MenuProps = {
   },
 };
 
-const tagsValue = ["Casual", "Cotton"];
+const tagsValue = ['Casual', 'Cotton'];
 
-const variationsValue = ["Small", "Medium", "Extra Large"];
+const variationsValue = ['Small', 'Medium', 'Extra Large'];
 
-const colorsValue = ["Red", "Green", "Orange"];
+const colorsValue = ['Red', 'Green', 'Orange'];
 
 const NewCategory = ({ categoryDataToEdit }) => {
-  console.log(categoryDataToEdit)
+  console.log(categoryDataToEdit);
   const [tags, setTags] = React.useState([]);
   const [color, setColor] = React.useState([]);
   const [isEdit, setisEdit] = React.useState(false);
   const [variations, setVariations] = React.useState([]);
 
   const [categoryData, setCategoryData] = useState({
-    name: "",
-    slug: "",
+    name: '',
+    slug: '',
     productCount: 0,
-    icon: "",
+    icon: '',
     tags: [],
-    image: null
+    image: null,
+  });
+
+  const [error, setError] = useState({
+    name: '',
+    slug: '',
+    productCount: 0,
+    icon: '',
+    tags: [],
+    image: null,
   });
 
   useEffect(() => {
     if (categoryDataToEdit) {
-      setisEdit(true)
+      setisEdit(true);
       setCategoryData({
         name: categoryDataToEdit.name,
         slug: categoryDataToEdit.slug,
         productCount: 0,
         icon: categoryDataToEdit.icon,
         tags: categoryDataToEdit.tags,
-        image: categoryDataToEdit.image
+        image: categoryDataToEdit.image,
       });
-
     }
   }, [categoryDataToEdit]);
-
 
   console.log('tags', tags);
   console.log('color', color);
@@ -73,12 +89,10 @@ const NewCategory = ({ categoryDataToEdit }) => {
     } = event;
 
     if (name === 'tags') {
-      setTags(
-        typeof value === "string" ? value.split(",") : value
-      );
+      setTags(typeof value === 'string' ? value.split(',') : value);
       setCategoryData((prevState) => ({
         ...prevState,
-        tags: typeof value === "string" ? value.split(",") : value
+        tags: typeof value === 'string' ? value.split(',') : value,
       }));
     }
   };
@@ -87,29 +101,28 @@ const NewCategory = ({ categoryDataToEdit }) => {
     const { name, value, checked } = event.target;
     setCategoryData((prevData) => ({
       ...prevData,
-      [name]: name === "customizable" ? checked : value,
+      [name]: name === 'customizable' ? checked : value,
     }));
   };
-
 
   const handleInputChange = (event) => {
     const { name, value, files } = event.target;
     if (files) {
-      if (name === "image") {
+      if (name === 'image') {
         setCategoryData((prevState) => ({
           ...prevState,
           image: files[0],
         }));
-      } else if (name === "icon") {
+      } else if (name === 'icon') {
         setCategoryData((prevState) => ({
           ...prevState,
           icon: files[0],
         }));
       }
     } else {
-      if (name === "name") {
+      if (name === 'name') {
         // Convert name to slug
-        const slug = value.toLowerCase().replace(/\s+/g, "-");
+        const slug = value.toLowerCase().replace(/\s+/g, '-');
         setCategoryData((prevState) => ({
           ...prevState,
           [name]: value,
@@ -124,44 +137,41 @@ const NewCategory = ({ categoryDataToEdit }) => {
     }
   };
 
-
-
   const handleCreateCategory = async () => {
     try {
       const formData = new FormData();
-      formData.append("image", categoryData.image);
-      formData.append("icon", categoryData.icon);
-      formData.append("name", categoryData.name);
-      formData.append("slug", categoryData.slug);
-      formData.append("productCount", categoryData.productCount);
-      formData.append("tags", JSON.stringify(categoryData.tags));
+      formData.append('image', categoryData.image);
+      formData.append('icon', categoryData.icon);
+      formData.append('name', categoryData.name);
+      formData.append('slug', categoryData.slug);
+      formData.append('productCount', categoryData.productCount);
+      formData.append('tags', JSON.stringify(categoryData.tags));
 
       const response = await createCategoryAPI(formData);
       if (response.success) {
         Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "category has been created",
+          position: 'center',
+          icon: 'success',
+          title: 'category has been created',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
         setCategoryData({
-          name: "",
-          slug: "",
+          name: '',
+          slug: '',
           productCount: 0,
-          icon: "",
+          icon: '',
           tags: [],
-          image: null
-        })
+          image: null,
+        });
       }
-      console.log("Category created successfully:", response);
+      console.log('Category created successfully:', response);
     } catch (error) {
-      console.error("Error creating category:", error);
+      console.error('Error creating category:', error);
     }
   };
 
-
-  console.log("categoryData", categoryData);
+  console.log('categoryData', categoryData);
   return (
     <div>
       <Typography variant="h4">Create a new category</Typography>
@@ -194,7 +204,7 @@ const NewCategory = ({ categoryDataToEdit }) => {
                 name="tags"
                 onChange={(event) => handleTagChange('tags', event)}
                 input={<OutlinedInput label="Tag" />}
-                renderValue={(selected) => selected.join(", ")}
+                renderValue={(selected) => selected.join(', ')}
                 MenuProps={MenuProps}
               >
                 {tagsValue.map((name) => (
@@ -212,11 +222,11 @@ const NewCategory = ({ categoryDataToEdit }) => {
               <input
                 style={{
                   opacity: 0,
-                  width: "100%",
-                  height: "99px",
-                  position: "absolute",
-                  right: "0px",
-                  left: "0px",
+                  width: '100%',
+                  height: '99px',
+                  position: 'absolute',
+                  right: '0px',
+                  left: '0px',
                 }}
                 accept="image/*"
                 id="image-upload"
@@ -231,11 +241,9 @@ const NewCategory = ({ categoryDataToEdit }) => {
                     <i className="fa fa-file-image-o"></i>
                   </div>
                   <div className="Neon-input-text">
-                    <h3>Upload an image</h3>{" "}
+                    <h3>Upload an image</h3>{' '}
                   </div>
-                  <a className="Neon-input-choose-btn blue">
-                    Click to upload image
-                  </a>
+                  <a className="Neon-input-choose-btn blue">Click to upload image</a>
                 </div>
                 {isEdit && categoryData.image && (
                   <div>
@@ -243,7 +251,7 @@ const NewCategory = ({ categoryDataToEdit }) => {
                     <img
                       src={categoryData.image.original}
                       alt="Selected"
-                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                      style={{ maxWidth: '100px', maxHeight: '100px' }}
                     />
                   </div>
                 )}
@@ -256,11 +264,11 @@ const NewCategory = ({ categoryDataToEdit }) => {
               <input
                 style={{
                   opacity: 0,
-                  width: "100%",
-                  height: "99px",
-                  position: "absolute",
-                  right: "0px",
-                  left: "0px",
+                  width: '100%',
+                  height: '99px',
+                  position: 'absolute',
+                  right: '0px',
+                  left: '0px',
                 }}
                 accept="image/svg+xml"
                 id="icon-upload"
@@ -274,11 +282,9 @@ const NewCategory = ({ categoryDataToEdit }) => {
                     <i className="fa fa-file-image-o"></i>
                   </div>
                   <div className="Neon-input-text">
-                    <h3>Icon</h3>{" "}
+                    <h3>Icon</h3>{' '}
                   </div>
-                  <a className="Neon-input-choose-btn blue">
-                    Click to upload icon
-                  </a>
+                  <a className="Neon-input-choose-btn blue">Click to upload icon</a>
                 </div>
                 {isEdit && categoryData.icon && (
                   <div>
@@ -287,9 +293,9 @@ const NewCategory = ({ categoryDataToEdit }) => {
                       src={categoryData.icon}
                       alt="Selected Icon"
                       style={{
-                        maxWidth: "100px",
-                        maxHeight: "100px",
-                        marginRight: "5px",
+                        maxWidth: '100px',
+                        maxHeight: '100px',
+                        marginRight: '5px',
                       }}
                     />
                   </div>
@@ -300,11 +306,7 @@ const NewCategory = ({ categoryDataToEdit }) => {
         </div>
       </div>
       <div className="create-category-button-yok">
-        <Button
-          onClick={handleCreateCategory}
-          variant="contained"
-          color="inherit"
-        >
+        <Button onClick={handleCreateCategory} variant="contained" color="inherit">
           Create Category
         </Button>
       </div>

@@ -39,7 +39,7 @@ export const createCategoryAPI = async (categoryData) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-
+    console.log('Response :: ', response);
     return response.data;
   } catch (error) {
     console.error('Error creating category:', error);
