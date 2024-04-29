@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -20,8 +20,10 @@ import {
   Select,
 } from '@mui/material';
 import './ReviewsView.css';
+import { getAllRating } from 'src/api/api';
 
 export default function ReviewsView() {
+  const [allReviews, setAllReviews] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 

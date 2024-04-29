@@ -258,15 +258,15 @@ const NewProduct = () => {
       if (!productData.name) {
         updatedErrors.name = 'Name is required';
       }
-      if (!productData.slug) {
-        updatedErrors.slug = 'Slug is required';
-      }
+      // if (!productData.slug) {
+      //   updatedErrors.slug = 'Slug is required';
+      // }
       if (!productData.image) {
         updatedErrors.image = 'Image is required';
       }
-      if (!productData.sku) {
-        updatedErrors.sku = 'Sku is required';
-      }
+      // if (!productData.sku) {
+      //   updatedErrors.sku = 'Sku is required';
+      // }
       if (!productData.description) {
         updatedErrors.description = 'Description is required';
       }
@@ -279,24 +279,24 @@ const NewProduct = () => {
       if (!productData.quantity) {
         updatedErrors.quantity = 'Quantity is required';
       }
-      if (!productData.gender) {
-        updatedErrors.gender = 'Gender is required';
-      }
+      // if (!productData.gender) {
+      //   updatedErrors.gender = 'Gender is required';
+      // }
       if (!productData.variations) {
         updatedErrors.variations = 'Variations is required';
       }
-      if (!productData.meta) {
-        updatedErrors.meta = 'Meta is required';
-      }
-      if (!productData.category) {
-        updatedErrors.category = 'Category is required';
-      }
-      if (!productData.tags) {
-        updatedErrors.tags = 'Tag is required';
-      }
-      if (!productData.types) {
-        updatedErrors.types = 'Types is required';
-      }
+      // if (!productData.meta) {
+      //   updatedErrors.meta = 'Meta is required';
+      // }
+      // if (!productData.category) {
+      //   updatedErrors.category = 'Category is required';
+      // }
+      // if (!productData.tags) {
+      //   updatedErrors.tags = 'Tag is required';
+      // }
+      // if (!productData.type) {
+      //   updatedErrors.types = 'Types is required';
+      // }
 
       if (Object.keys(updatedErrors).length > 0) {
         setErrors((prevErrors) => ({

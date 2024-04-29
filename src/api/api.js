@@ -220,6 +220,21 @@ export const fetchTermsCondition = async () => {
   }
 };
 
+export const fetchAboutUs = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/about-us/get`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    console.log('Response About Us :: ', response.data.aboutUs);
+    return response.data.aboutUs;
+  } catch (error) {
+    console.error('Error creating product:', error);
+    throw error;
+  }
+};
+
 export const creteSubmenu = async (data) => {
   try {
     const response = await axios.post(`${BASE_URL}/sub-category/create`, data, {
@@ -234,6 +249,7 @@ export const creteSubmenu = async (data) => {
     throw error;
   }
 };
+
 export const updateSubmenu = async (data) => {
   try {
     const response = await axios.post(`${BASE_URL}/sub-category/update`, data, {
@@ -467,5 +483,26 @@ export const deleteCoupons = async (data) => {
   } catch (error) {
     console.error('Error fetching submenus:', error);
     throw error;
+  }
+};
+
+export const getPaymentGatewayKeys = async () => {
+  try {
+    const url = `${BASE_URL}/razorpay/getKeys`;
+    const response = await axios.get(url);
+    return response;
+  } catch (error) {
+    console.error('Error fetching submenus:', error);
+    throw error;
+  }
+};
+
+export const getAllRating = async () => {
+  try {
+    const url = `${BASE_URL}/rating/get`;
+    const response = await axios.get(url);
+    console.log('All Rating Response :: ', response);
+  } catch (error) {
+    console.error('Error fetching ratings :: ', error);
   }
 };
