@@ -5,13 +5,13 @@ import CategoriesView from 'src/sections/products/category/CategoriesView';
 // ----------------------------------------------------------------------
 
 export default function Categorypage() {
-    return (
-        <>
-            <Helmet>
-                <title> YOK </title>
-            </Helmet>
+  return (
+    <>
+      <Helmet>
+        <title> YOK </title>
+      </Helmet>
 
-            <CategoriesView />
-        </>
-    );
+      <CategoriesView />
+    </>
+  );
 }

@@ -1,49 +1,66 @@
 /* eslint-disable */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 
-import { createCoupons, createProductAPI } from "src/api/api";
+import { createCoupons, createProductAPI } from 'src/api/api';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-const NewDiscountCoupon = ({setActiveButton, createDataForCoupon}) => {
+const NewDiscountCoupon = ({ setActiveButton, createDataForCoupon }) => {
   const navigate = useNavigate();
 
-  const [productData, setProductData] = useState({
+  const [errors, setErrors] = useState({
+    name: '',
+    type: '',
+    discount: '',
+    quantity: '',
   });
+
+  const [productData, setProductData] = useState({});
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    const updatedErrors = { ...errors };
     setProductData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+    updatedErrors[name] = '';
+    setErrors(updatedErrors);
   };
 
   const handleCreateProduct = async () => {
-    try{
-        const response = await createCoupons(productData)
-        console.log('response', response);
-        if(response?.data?.message === "Coupon data saved successfully"){
-            setActiveButton('product')
-            createDataForCoupon(productData)
-          }
-    }catch(error){
-        console.log('error', error);
+    try {
+      const updatedErrors = {};
+
+      if (!productData.name) {
+        updatedErrors.name = 'Name is required';
+      }
+
+      if (Object.keys(updatedErrors).length > 0) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          ...updatedErrors,
+        }));
+        return;
+      }
+
+      const response = await createCoupons(productData);
+      console.log('response', response);
+      if (response?.data?.message === 'Coupon data saved successfully') {
+        setActiveButton('product');
+        createDataForCoupon(productData);
+      }
+    } catch (error) {
+      console.log('error', error);
     }
   };
 
-console.log('productData', productData);
+  console.log('productData', productData);
   return (
     <div>
       <Typography variant="h4">Create a new Coupon</Typography>
@@ -58,6 +75,7 @@ console.log('productData', productData);
               name="name"
               onChange={handleChange}
             />
+            {errors.name && <div style={{ color: 'red', fontSize: '15px' }}>{errors.name}</div>}
           </div>
 
           <div className="mt-4">
@@ -101,11 +119,7 @@ console.log('productData', productData);
       </div>
 
       <div className="create-product-button-yok">
-        <Button
-          onClick={handleCreateProduct}
-          variant="contained"
-          color="inherit"
-        >
+        <Button onClick={handleCreateProduct} variant="contained" color="inherit">
           Create Coupon
         </Button>
       </div>

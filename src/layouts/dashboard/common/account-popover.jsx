@@ -35,20 +35,19 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
   const router = useRouter();
 
-
   useEffect(() => {
-    const authToken = Cookies.get("token");
+    const authToken = Cookies.get('token');
     const userData = JSON.parse(authToken);
-    if(!userData){
+    if (!userData) {
       router.push('/login');
     }
-    if(userData){
-      setUser(userData)
+    if (userData) {
+      setUser(userData);
     }
-  }, [])
+  }, []);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -56,8 +55,12 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
-    Cookies.remove('token')
-    window.location.href = '/'
+    Cookies.remove('token');
+    window.location.href = '/';
+  };
+
+  const handleProfileClose = () => {
+    setOpen(null);
   };
 
   return (
@@ -90,7 +93,7 @@ export default function AccountPopover() {
       <Popover
         open={!!open}
         anchorEl={open}
-        onClose={handleClose}
+        onClose={handleProfileClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         PaperProps={{
@@ -102,14 +105,16 @@ export default function AccountPopover() {
           },
         }}
       >
-        {user && <Box sx={{ my: 1.5, px: 2 }}>
-          <Typography variant="subtitle2" noWrap>
-            {user.name}
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user.email}
-          </Typography>
-        </Box>}
+        {user && (
+          <Box sx={{ my: 1.5, px: 2 }}>
+            <Typography variant="subtitle2" noWrap>
+              {user.name}
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+              {user.email}
+            </Typography>
+          </Box>
+        )}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
