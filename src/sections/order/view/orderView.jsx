@@ -222,7 +222,7 @@ export default function OrderView() {
                       >
                         <VisibilityIcon />
                       </IconButton>
-                      <IconButton
+                      {/* <IconButton
                         onClick={() => handleEdit(product.id)}
                         title="Edit"
                       >
@@ -233,7 +233,7 @@ export default function OrderView() {
                         title="Delete"
                       >
                         <DeleteIcon />
-                      </IconButton>
+                      </IconButton> */}
                     </td>
                   </tr>
                 ))
