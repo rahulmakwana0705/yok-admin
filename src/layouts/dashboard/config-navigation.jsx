@@ -97,8 +97,8 @@ const navConfig = [
     icon: <LocalShippingTwoToneIcon />,
   },
   {
-    title: 'Transection',
-    path: '/transection',
+    title: 'Transaction',
+    path: '/transaction',
     icon: <CurrencyExchangeTwoToneIcon />,
   },
   {
@@ -106,11 +106,11 @@ const navConfig = [
     path: '/payment-setting',
     icon: <CurrencyExchangeTwoToneIcon />,
   },
-  {
-    title: 'Invoice',
-    path: '/invoice',
-    icon: <DescriptionTwoToneIcon />,
-  },
+  // {
+  //   title: 'Invoice',
+  //   path: '/invoice',
+  //   icon: <DescriptionTwoToneIcon />,
+  // },
   {
     title: 'Contect Us',
     path: '/Contect-us',

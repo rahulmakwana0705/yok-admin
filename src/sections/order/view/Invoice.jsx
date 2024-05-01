@@ -1,24 +1,22 @@
-import React from 'react';
+/* eslint-disable */
+import React from "react";
 
-const Invoice = () => {
+const Invoice = ({ clickedFiltedProduct }) => {
+  console.log("clickedFiltedProduct in invoice", clickedFiltedProduct);
   const invoiceData = {
-    invoiceNumber: 'INV-001',
-    invoiceDate: '2022-02-20',
-    dueDate: '2022-03-05',
+    invoiceDate: clickedFiltedProduct.createdAt,
     from: {
-      name: 'Your Company Name',
-      address: '456 Business St, Cityville',
-      email: 'info@yourcompany.com',
+      name: "Your Company Name",
+      address: "456 Business St, Cityville",
+      email: "info@yourcompany.com",
     },
     to: {
-      name: 'John Doe',
-      address: '123 Main St, Cityville',
-      email: 'john@example.com',
+      name: `${clickedFiltedProduct.shippingAddress.firstName} ${clickedFiltedProduct.shippingAddress?.lastName}`,
+      email: clickedFiltedProduct.shippingAddress.email,
+      address: `${clickedFiltedProduct.shippingAddress.address}, ${clickedFiltedProduct.shippingAddress.city}`,
+      phone: `${clickedFiltedProduct.shippingAddress.phone}`,
     },
-    items: [
-      { id: 1, description: 'Product A', quantity: 2, price: 20 },
-      { id: 2, description: 'Product B', quantity: 1, price: 25 },
-    ],
+    items: clickedFiltedProduct.products,
     total: 0,
   };
 
@@ -33,21 +31,19 @@ const Invoice = () => {
       <div className="invoice-details">
         <div className="invoice-section">
           <h3>Invoice From</h3>
-          <p>{invoiceData.from.name}</p>
-          <p>{invoiceData.from.address}</p>
-          <p>Email: {invoiceData.from.email}</p>
+          <p>YOK International</p>
+          <p>yokinternational@gmail.com</p>
         </div>
         <div className="invoice-section">
           <h3>Invoice To</h3>
-          <p>{invoiceData.to.name}</p>
-          <p>{invoiceData.to.address}</p>
+          <p>Name: {invoiceData.to.name}</p>
           <p>Email: {invoiceData.to.email}</p>
+          <p>Phone: {invoiceData.to.phone}</p>
+          <p>Address: {invoiceData.to.address}</p>
         </div>
         <div className="invoice-section">
           <h3>Invoice Details</h3>
-          <p>Invoice Number: {invoiceData.invoiceNumber}</p>
           <p>Invoice Date: {invoiceData.invoiceDate}</p>
-          <p>Due Date: {invoiceData.dueDate}</p>
         </div>
       </div>
       <table className="invoice-table">
@@ -71,7 +67,7 @@ const Invoice = () => {
         </tbody>
       </table>
       <div className="invoice-total">
-        <p>Total: ${invoiceData.total}</p>
+        <p>Total: ${clickedFiltedProduct.totalPrice}</p>
       </div>
     </div>
   );

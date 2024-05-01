@@ -66,7 +66,7 @@ export default function RolesView() {
     setSortOption(event.target.value);
   };
 
-  const totalPages = Math.ceil(dummyReviews?.length / itemsPerPage);
+  const totalPages = Math.ceil(orders?.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const filteredReviews = orders
@@ -96,7 +96,7 @@ export default function RolesView() {
     <Container>
       <div>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4">Transection</Typography>
+          <Typography variant="h4">Transaction</Typography>
         </Stack>
 
         <Stack

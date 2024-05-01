@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Pagination from '@mui/material/Pagination';
+import InsertDriveFileSharpIcon from '@mui/icons-material/InsertDriveFileSharp';
 
 import Iconify from 'src/components/iconify';
 
@@ -33,6 +34,7 @@ import {
   TextField,
 } from "@mui/material";
 import { getAllOrders } from "src/api/api";
+import Invoice from "./Invoice";
 
 export default function OrderView() {
   const [activeButton, setActiveButton] = useState("product");
@@ -42,7 +44,11 @@ export default function OrderView() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  const [pageToOpen, setPageToOpen] = useState("orders")
+
   const [value, setValue] = React.useState(null);
+
+  const [clickedFiltedProduct, setClickedFiltedProduct] = useState(null)
 
   const handleNewProductButtonClick = () => {
     console.log('cli');
@@ -66,78 +72,7 @@ export default function OrderView() {
       console.error("Error fetching orders:", error);
     }
   };
-  const additionalDummyOrders = [
-    {
-      order: 4,
-      customer: 'Alice Johnson',
-      date: '2024-02-17',
-      items: [
-        { id: 1, product: 'Product A', price: '$20', quantity: 2 },
-        { id: 3, product: 'Product C', price: '$30', quantity: 1 },
-      ],
-      price: '$70',
-      status: 'Processing',
-    },
-    {
-      order: 5,
-      customer: 'Charlie Brown',
-      date: '2024-02-18',
-      items: [{ id: 2, product: 'Product B', price: '$25', quantity: 3 }],
-      price: '$75',
-      status: 'Shipped',
-    },
-    {
-      order: 6,
-      customer: 'Eva Green',
-      date: '2024-02-19',
-      items: [
-        { id: 1, product: 'Product A', price: '$20', quantity: 1 },
-        { id: 3, product: 'Product C', price: '$30', quantity: 2 },
-      ],
-      price: '$80',
-      status: 'Delivered',
-    },
-    {
-      order: 7,
-      customer: 'David Smith',
-      date: '2024-02-20',
-      items: [{ id: 2, product: 'Product B', price: '$25', quantity: 5 }],
-      price: '$125',
-      status: 'Pending',
-    },
-    {
-      order: 8,
-      customer: 'Grace Johnson',
-      date: '2024-02-21',
-      items: [
-        { id: 1, product: 'Product A', price: '$20', quantity: 3 },
-        { id: 2, product: 'Product B', price: '$25', quantity: 2 },
-        { id: 3, product: 'Product C', price: '$30', quantity: 1 },
-      ],
-      price: '$145',
-      status: 'Processing',
-    },
-    {
-      order: 9,
-      customer: 'Frank Brown',
-      date: '2024-02-22',
-      items: [{ id: 3, product: 'Product C', price: '$30', quantity: 4 }],
-      price: '$120',
-      status: 'Shipped',
-    },
-    {
-      order: 10,
-      customer: 'Helen Green',
-      date: '2024-02-23',
-      items: [
-        { id: 1, product: 'Product A', price: '$20', quantity: 2 },
-        { id: 2, product: 'Product B', price: '$25', quantity: 1 },
-        { id: 3, product: 'Product C', price: '$30', quantity: 3 },
-      ],
-      price: '$135',
-      status: 'Delivered',
-    },
-  ];
+  
   const handleView = (productId) => {
     console.log(`View product with ID: ${productId}`);
   };
@@ -174,11 +109,11 @@ export default function OrderView() {
     return true;
   });
   console.log('sortOption', filteredOrders);
-  const totalPages = Math.ceil(additionalDummyOrders?.length / itemsPerPage);
+  const totalPages = Math.ceil(orders?.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const filteredProducts = additionalDummyOrders
-    .filter((product) => {
+  const filteredProducts = orders
+    ?.filter((product) => {
       const searchTermLower = searchTerm.toLowerCase();
       return Object.values(product).some(
         (value) => typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
@@ -202,10 +137,16 @@ export default function OrderView() {
     setCurrentPage(value);
   };
 
+  const hanleInvoiceClick = (productId) => {
+    setPageToOpen("invoice")
+    const filtedItem = filteredOrders.filter((o) => o._id === productId)
+    setClickedFiltedProduct(filtedItem[0])
+  }
+
   console.log('sortOption', sortOption);
   return (
     <Container>
-      <div>
+      {pageToOpen === "orders" && <div>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4">Orders</Typography>
         </Stack>
@@ -308,16 +249,16 @@ export default function OrderView() {
                     <td>{orders.totalPrice}</td>
                     <td>{orders.status}</td>
                     <td>
-                      <IconButton onClick={() => handleView(product.id)} title="View">
+                      <IconButton onClick={() => handleView(orders._id)} title="View">
                         <VisibilityIcon className="aquablue" />
                       </IconButton>
-                      {/* <IconButton
-                        onClick={() => handleEdit(product.id)}
-                        title="Edit"
-                      >
-                        <EditIcon />
-                      </IconButton>
                       <IconButton
+                        onClick={() => hanleInvoiceClick(orders._id)}
+                        title="Invoice"
+                      >
+                        <InsertDriveFileSharpIcon />
+                      </IconButton>
+                      {/* <IconButton
                         onClick={() => handleDelete(product.id)}
                         title="Delete"
                       >
@@ -347,7 +288,8 @@ export default function OrderView() {
             </Stack>
           </div>
         )}
-      </div>
+      </div>}
+      {pageToOpen === "invoice" && <Invoice clickedFiltedProduct={clickedFiltedProduct}/>}
     </Container>
   );
 }

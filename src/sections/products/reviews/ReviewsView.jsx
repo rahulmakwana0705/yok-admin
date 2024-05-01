@@ -66,11 +66,11 @@ export default function ReviewsView() {
     setSortOption(event.target.value);
   };
 
-  const totalPages = Math.ceil(dummyReviews?.length / itemsPerPage);
+  const totalPages = Math.ceil(review?.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const filteredReviews = dummyReviews
-    .filter((review) => {
+  const filteredReviews = review
+    ?.filter((review) => {
       const searchTermLower = searchTerm.toLowerCase();
       return Object.values(review).some(
         (value) =>
