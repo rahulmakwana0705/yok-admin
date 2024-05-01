@@ -479,53 +479,54 @@ export const deleteCoupons = async (data) => {
       },
     });
 
-        return response;
-    } catch (error) {
-        console.error('Error fetching submenus:', error);
-        throw error;
-    }
+    return response;
+  } catch (error) {
+    console.error('Error fetching submenus:', error);
+    throw error;
+  }
 };
 
 export const getRating = async (data) => {
-    try {
-        const url = `${BASE_URL}/rating/get`;
+  try {
+    const url = `${BASE_URL}/rating/get`;
 
-        const response = await axios.get(url, data, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+    const response = await axios.get(url, data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-        return response;
-    } catch (error) {
-        console.error('Error fetching submenus:', error);
-        throw error;
-    }
+    return response;
+  } catch (error) {
+    console.error('Error fetching submenus:', error);
+    throw error;
+  }
 };
 
 
 // get all orders
 
 export const getAllOrders = async (data) => {
-    try {
-        const url = `${BASE_URL}/order/get`;
+  try {
+    const url = `${BASE_URL}/order/get`;
 
-        const response = await axios.get(url, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+    const response = await axios.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-        return response;
-    } catch (error) {
-        console.error('Error fetching submenus:', error);
-        throw error;
-    }
+    return response;
+  } catch (error) {
+    console.error('Error fetching submenus:', error);
+    throw error;
+  }
 };
 
 export const getPaymentGatewayKeys = async () => {
   try {
-    const url = `${BASE_URL}/razorpay/getKeys`;
+    const url = `${BASE_URL}/razorpay/get`;
+    // const url = `${BASE_URL}/razorpay/getKeys`;
     const response = await axios.get(url);
     return response;
   } catch (error) {
@@ -541,5 +542,16 @@ export const getAllRating = async () => {
     console.log('All Rating Response :: ', response);
   } catch (error) {
     console.error('Error fetching ratings :: ', error);
+  }
+};
+
+export const createUpdateKeys = async (data) => {
+  try {
+    const url = `${BASE_URL}/razorpay/create`;
+    const response = await axios.post(url, data);
+    return response;
+  } catch (error) {
+    console.error('Error in creating keys:', error);
+    throw error;
   }
 };
